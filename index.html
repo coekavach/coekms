@@ -45,11 +45,7 @@
     <title>KMS: Knowledge Management System - Kavach</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <!-- Leaflet MarkerCluster CSS (No longer strictly needed for this map, but kept for other potential uses) -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+    <!-- Leaflet CSS and JS are no longer needed as the map is replaced by an iframe -->
     <style>
         @keyframes popIn {
             0% { transform: scale(0.5); opacity: 0; }
@@ -227,18 +223,6 @@
             transition: width 0.6s ease;
         }
         
-        /* .train-marker class is no longer used for map pins, kept for potential other uses or if you revert */
-        .train-marker { 
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            border: 3px solid white;
-            box-shadow: 0 0 0 3px rgba(0,0,0,0.3); 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
         .delay-indicator {
             position: absolute;
             top: -8px;
@@ -272,16 +256,13 @@
         .map-container {
             position: relative;
             width: 100%;
-            height: 500px;
+            height: 500px; /* This height will be applied to the iframe parent */
             background-color: #f0f4f8;
             border-radius: 0.5rem;
             overflow: hidden;
         }
         
-        #kavach-map {
-            width: 100%;
-            height: 100%;
-        }
+        /* #kavach-map is no longer needed as it's replaced by an iframe */
         
         .module-card {
             transition: all 0.3s ease;
@@ -298,6 +279,7 @@
             margin-bottom: 1rem;
         }
         
+        /* Legend styles might not be needed if the iframe has its own legend */
         .legend {
             padding: 10px;
             background: white;
@@ -307,9 +289,7 @@
             color: #555;
         }
         
-        /* Removed specific styling for .legend i that made it a circle, as FA icons are used now */
         .legend i {
-             /* FontAwesome icons will have their own size/shape. Margin/opacity can be controlled via HTML/Tailwind or here if needed globally for legend icons. */
             opacity: 0.9;
         }
         
@@ -344,7 +324,7 @@
         }
         
         .scrolling-container {
-            height: 100%;
+            /* height: 100%; REMOVED flex-1 and height: 100% from here, will be set inline for fixed height */
             overflow: hidden;
             position: relative;
         }
@@ -600,97 +580,18 @@
                     <!-- Container for Kavach Implementation Status and Recent Activities -->
                     <div class="grid grid-cols-1 md:grid-cols-[11fr_4fr] gap-6">
                         <!-- Kavach Implementation Status Card -->
-                        <div class="dashboard-card bg-white rounded-xl shadow-md p-6 mb-8" style="--order: 1;">
+                        <div class="dashboard-card bg-white rounded-xl shadow-md p-6 mb-8 md:self-start" style="--order: 1;">
                             <div class="flex justify-between items-center mb-6">
                                 <div>
                                     <h2 class="text-xl font-bold text-gray-800">Kavach Implementation Status</h2>
-                                    <!-- Removed Zone Status Info and Buttons as per request -->
                                 </div>
                             </div>
                             
                             <div class="map-container">
-                                <div id="kavach-map"></div>
+                                <iframe src="https://coekavach.github.io/coegis/" style="width:100%; height:100%; border:none;" title="Kavach GIS Map"></iframe>
                             </div>
                             
-                            <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <div class="bg-gray-50 p-4 rounded-lg">
-                                    <p class="text-gray-500 text-sm">Total Routes</p>
-                                    <p class="font-medium text-xl">23</p>
-                                </div>
-                                <div class="bg-gray-50 p-4 rounded-lg">
-                                    <p class="text-gray-500 text-sm">Routes with Kavach</p>
-                                    <p class="font-medium text-xl">15</p>
-                                </div>
-                                <div class="bg-gray-50 p-4 rounded-lg">
-                                    <p class="text-gray-500 text-sm">Average Implementation</p>
-                                    <p class="font-medium text-xl">63%</p>
-                                </div>
-                            </div>
-
-                            <!-- Kavach Installation Progress -->
-                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
-                                <div class="dashboard-card shine-effect bg-white rounded-xl shadow-md p-6" style="--order: 2;">
-                                    <div class="flex justify-between items-start">
-                                        <div>
-                                            <p class="text-gray-500 text-sm font-medium">Locomotives with Kavach</p>
-                                            <h3 class="text-3xl font-bold text-gray-800 mt-2">4,256</h3>
-                                            <p class="text-green-500 text-sm mt-2 flex items-center">
-                                                <i class="fas fa-arrow-up mr-1"></i>
-                                                <span>12% from last month</span>
-                                            </p>
-                                        </div>
-                                        <div class="card-icon bg-blue-100 p-3 rounded-lg text-blue-600">
-                                            <i class="fas fa-train text-2xl"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="dashboard-card shine-effect bg-white rounded-xl shadow-md p-6" style="--order: 3;">
-                                    <div class="flex justify-between items-start">
-                                        <div>
-                                            <p class="text-gray-500 text-sm font-medium">Pending Installations</p>
-                                            <h3 class="text-3xl font-bold text-gray-800 mt-2">1,842</h3>
-                                            <p class="text-red-500 text-sm mt-2 flex items-center">
-                                                <i class="fas fa-arrow-down mr-1"></i>
-                                                <span>8% from last month</span>
-                                            </p>
-                                        </div>
-                                        <div class="card-icon bg-yellow-100 p-3 rounded-lg text-yellow-600">
-                                            <i class="fas fa-tools text-2xl"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="dashboard-card shine-effect bg-white rounded-xl shadow-md p-6" style="--order: 4;">
-                                    <div class="flex justify-between items-start">
-                                        <div>
-                                            <p class="text-gray-500 text-sm font-medium">Installation Progress</p>
-                                            <h3 class="text-3xl font-bold text-gray-800 mt-2">68%</h3>
-                                            <div class="progress-bar mt-3">
-                                                <div class="progress-bar-fill bg-blue-600" style="width: 68%"></div>
-                                            </div>
-                                        </div>
-                                        <div class="card-icon bg-green-100 p-3 rounded-lg text-green-600">
-                                            <i class="fas fa-chart-line text-2xl"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="dashboard-card shine-effect bg-white rounded-xl shadow-md p-6" style="--order: 5;">
-                                    <div class="flex justify-between items-start">
-                                        <div>
-                                            <p class="text-gray-500 text-sm font-medium">Target Completion</p>
-                                            <h3 class="text-3xl font-bold text-gray-800 mt-2">Dec 2025</h3>
-                                            <p class="text-gray-500 text-sm mt-2">
-                                                <span class="font-medium">328 days</span> remaining
-                                            </p>
-                                        </div>
-                                        <div class="card-icon bg-purple-100 p-3 rounded-lg text-purple-600">
-                                            <i class="fas fa-calendar-check text-2xl"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <!-- Removed stats cards from here -->
                         </div>
                         
                         <!-- Recent Activities Card -->
@@ -700,9 +601,8 @@
                                 <button class="text-blue-600 text-sm font-medium">View All</button>
                             </div>
                             
-                            <div class="scrolling-container flex-1">
+                            <div class="scrolling-container" style="height: 500px;">
                                 <div class="activity-list space-y-4">
-                                    <!-- Original Activities -->
                                     <div class="flex items-start p-3 rounded-lg bg-blue-50 border-l-4 border-blue-500">
                                         <div class="mr-3 text-blue-500">
                                             <i class="fas fa-train"></i>
@@ -747,7 +647,6 @@
                                         </div>
                                     </div>
                                     
-                                    <!-- Duplicated Activities for Seamless Scrolling -->
                                     <div class="flex items-start p-3 rounded-lg bg-blue-50 border-l-4 border-blue-500">
                                         <div class="mr-3 text-blue-500">
                                             <i class="fas fa-train"></i>
@@ -874,12 +773,7 @@
         </div>
     </div>
 
-    <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <!-- Leaflet MarkerCluster JS (No longer strictly needed for this map, but kept for other potential uses) -->
-    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
-    <!-- Leaflet AJAX for GeoJSON loading -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-ajax/2.1.0/leaflet.ajax.min.js"></script>
+    <!-- Leaflet JS and related scripts are no longer needed -->
 
     <script>
         // GK variables (already present)
@@ -914,152 +808,10 @@
         return gk_fileData[filename] || "";
         }
         
-        // Data from location.txt
-        const locationTsvData = `Name	Stationary_Unit_Tower_Lattitude	Stationary_Unit_Tower_Longitude
-24001 - 1/11-VIRAR(VR)	19.4547	72.8119
-24002 - 1/11-VAITARNA (VTN)	19.5188	72.8502
-24003 - 1/11-SAPHALE (SAH)	19.577	72.8215
-24004 - 1/11-KELVE ROAD (KLV)	19.6266	72.7906
-24005 - 1/11-PALGHAR (PLG)	19.6976	72.772
-24100 - 1/11-PALGHAR-BOISAR	19.7558	72.7606
-24006 - 1/11-BOISAR (BOR)	19.7984	72.7616
-24007 - 1/11-VANGAON (VGN)	19.8831	72.7635
-24101 - 1/11-VANGAON-DAHANU ROAD	19.9441	72.7569
-24008 - 1/11-DAHANU ROAD (DRD)	19.9913	72.7436
-24102 - 2/11-DAHANU ROAD-GHOLVAD	20.0555	72.7266
-24009 - 2/11-GHOLVAD (GVD)	20.0867	72.7379
-24010 - 2/11-UMBERGAON ROAD (UBR)	20.1537	72.7907
-24011 - 2/11-SANJAN (SJN)	20.1918	72.8211
-24103 - 2/11-SANJAN -BHILAD	20.2234	72.8434
-24012 - 2/11-BHILAD (BLD)	20.2752	72.8876
-24013 - 2/11-KARAMBELI (KEB)	20.3161	72.9013
-24014 - 2/11-VAPI (VAPI)	20.3734	72.9084
-24104 - 2/11-VAPI -UDVADA	20.4232	72.9112
-24015 - 2/11-UDVADA (UVD)	20.462	72.9191
-24016 - 3/11-PARDI (PAD)	20.5138	72.9244
-24017 - 3/11-ATUL (ATUL)	20.5468	72.9277
-24018 - 3/11-VALSAD (BL)	20.608	72.9339
-24019 - 3/11-DUNGRI (DGI)	20.6878	72.9494
-24020 - 3/11-BILIMORA (BIM)	20.7655	72.9703
-24021 - 3/11-AMALSAD (AML)	20.8116	72.9559
-24022 - 3/11-VEDCHHA (VDH)	20.8743	72.9363
-24023 - 3/11-NAVSARI (NVS)	20.9468	72.9139
-24024 - 3/11-MAROLI (MRL)	21.0201	72.8906
-24025 - 3/11-SACHIN (SCH)	21.0766	72.8745
-24026 - 4/11-BHESTAN(BHET)	21.1225	72.8633
-24027 - 4/11-UDHAN JN(UDN)	21.1663	72.8519
-24028 - 4/11-SURAT(ST)	21.2048	72.841
-24029 - 4/11-UTRAN(URN)	21.2336	72.8553
-24030 - 4/11-KOSAD(KSE)	21.2608	72.8675
-24031 - 4/11-GOTHANGAM(GTX)	21.2908	72.8792
-24032 - 4/11-SAYAN(SYN)	21.3175	72.8903
-24105 - 4/11-SAYAN-KIM	21.3686	72.913
-24033 - 4/11-KIM(KIM)	21.4	72.9267
-24034 - 4/11-KOSAMBA JN(KSB)	21.4639	72.955
-24035 - 5/11-PANOLI	21.5361	72.9783
-24106 - 5/11-PANOLI-ANKLEAHWAR	21.6082	72.9969
-24036 - 5/11-ANKLEAHWAR JN(AKV)	21.625	73.0014
-24107 - 5/11-ANKLEAHWAR JN-BHARUCH A JN	21.6587	73.01
-24037 - 5/11-BHARUCH A JN(BH-A)	21.7036	72.9997
-24039 - 5/11-CHAVAJ BLOCK CABIN(CVJ)	21.7503	73.0092
-24040 - 5/11-NABIPUR(NIU)	21.8081	73.0308
-24041 - 5/11-VAREDIYA(VRE)	21.8675	73.0525
-24042 - 5/11-PALEJ(PLJ)	21.9211	73.0725
-24043 - 5/11-LAKODRA(LKD)	21.9919	73.099
-24044 - 6/11-MIYAGAM KARJAN(MYG)	22.0508	73.1203
-24045 - 6/11-KASHIPURA SARAR(KSPR)	22.1168	73.1449
-24046 - 6/11-ITOLA(ITA)	22.1499	73.1566
-24047 - 6/11-VARNAMA(VRM)	22.285	73.1794
-24048 - 6/11-MAKARPURA(MPR)	22.1833	73.1695
-24049 - 6/11-VISHVAMITRI(VS)	22.2357	73.1762
-24050 - 6/11-VADODARA JN. (BRC)	22.3108	73.1808
-24051 - 6/11-VADODARA YARD (BRGY)	22.3285	73.1712
-24052 - 6/11-CHHAYAPURI (CYI )	22.3712	73.1655
-24053 - 6/11-PILOL (PIO)	22.4151	73.2097
-24125 - 7/11-PIO-SMLA	22.4521	73.2564
-24054 - 7/11-SAMLAYA JN (SMLA)	22.4849	73.3027
-24126 - 7/11-SMLA-CPN	22.5125	73.3466
-24055 - 7/11-CHAMPANER ROAD (CPN)	22.5417	73.3933
-24056 - 7/11-BAKROL (BKRL)	22.5873	73.419
-24057 - 7/11-DEROL (DRL)	22.63	73.462
-24127 - 7/11-DRL_KRSA	22.6706	73.5187
-24058 - 7/11-KHARSALIYA (KRSA)	22.7049	73.5542
-24128 - 7/11-KRSA-GDA	22.7456	73.5679
-24059 - 7/11-GODHRA JN. (GDA)	22.7768	73.6048
-24060 - 8/11-KANSUDHI	22.7893	73.6482
-24061 - 8/11-CHANCHELAV	22.7965	73.7142
-24062 - 8/11-SANTROAD	22.7956	73.8014
-24129 - 8/11-SAT-PPD	22.7958	73.8496
-24063 - 8/11-PIPLOD	22.8181	73.9072
-24064 - 8/11-LIMKHEDA	22.8347	73.9847
-24130 - 8/11-LMK-MAM	22.8349	74.026
-24065 - 8/11-MANGAL MAHUDI	22.8368	74.057
-24066 - 8/11-USRA	22.849	74.1027
-24067 - 8/11-JEKOT	22.8659	74.1596
-24068 - 9/11-RENTIYA	22.8631	74.2106
-24069 - 9/11-DAHOD	22.8436	74.2542
-24131 - 9/11-DHD-BIO	22.8537	74.3038
-24070 - 9/11-BORDI	22.8668	74.3481
-24071 - 9/11-ANAS	22.8653	74.4214
-24132 - 9/11-ANAS-MGN	22.8729	74.4985
-24072 - 9/11-MEGHNAGAR	22.9075	74.5397
-24073 - 9/11-THANDLA ROAD	22.9624	74.5883
-24074 - 9/11-BAJRANG GARH	22.9878	74.6436
-24075 - 9/11-PANCH PIPLIA	23.0332	74.6677
-24133 - 10/11-PCN-AGR	23.0451	74.6904
-24076 - 10/11-AMAR GARH	23.0633	74.7376
-24077 - 10/11-BAMNIA	23.095	74.7584
-24078 - 10/11-BHAIRON GARH	23.1451	74.7771
-24134 - 10/11-BOG-RTI	23.1663	74.838
-24079 - 10/11-RAOTI	23.1838	74.8795
-24080 - 10/11-BILDI	23.2251	74.9183
-24135 - 10/11-BILDI-MRN	23.2516	74.9442
-24081 - 10/11-MORWANI	23.2765	74.978
-24136 - 10/11-MRN-RTD	23.3099	75.0065
-24082 - 11/11-RATLAM A	23.3359	75.0341
-24083 - 11/11-RATLAM	23.3364	75.0474
-24084 - 11/11-RATLAM E	23.3641	75.0726
-24085 - 11/11-BANGROD	23.3967	75.1222
-24137 - 11/11-BOD-RNH	23.4099	75.1504
-24086 - 11/11-RUNKHERA	23.4144	75.1883
-24138 - 11/11-RNH-KUH	23.4301	75.2374
-24087 - 11/11-KHACHROD	23.4423	75.286
-24088 - 11/11-BERAWANIYA	23.4668	75.3356
-24139 - 11/11-BRNA-NAD	23.4644	75.3656
-24089 - 11/11-NAGDA	23.4567	75.412`;
-
-        function parseTsvData(tsvString) {
-            const lines = tsvString.trim().split('\n');
-            const headers = lines[0].split('\t').map(h => h.trim());
-            const data = [];
-            const nameIndex = headers.indexOf('Name');
-            const latIndex = headers.indexOf('Stationary_Unit_Tower_Lattitude');
-            const lonIndex = headers.indexOf('Stationary_Unit_Tower_Longitude');
-
-            if (nameIndex === -1 || latIndex === -1 || lonIndex === -1) {
-                console.error("TSV headers are not as expected. Check column names.");
-                return data;
-            }
-
-            for (let i = 1; i < lines.length; i++) {
-                const values = lines[i].split('\t');
-                if (values.length >= Math.max(nameIndex, latIndex, lonIndex) + 1) { 
-                    const entry = {
-                        Name: values[nameIndex].trim(),
-                        Stationary_Unit_Tower_Lattitude: values[latIndex].trim(),
-                        Stationary_Unit_Tower_Longitude: values[lonIndex].trim()
-                    };
-                    data.push(entry);
-                } else {
-                    console.warn(`Skipping malformed TSV line: ${lines[i]}`);
-                }
-            }
-            return data;
-        }
-
+        // locationTsvData and parseTsvData are no longer needed as Leaflet map is removed.
 
         document.addEventListener('DOMContentLoaded', function() {
-            const navLinkItems = document.querySelectorAll('nav a.nav-item'); 
+            const navLinkItems = document.querySelectorAll('nav a.nav-item, nav div.nav-item'); 
             const homeLink = document.getElementById('nav-home');
             const chatbotLink = document.getElementById('nav-chatbot');
             const aiSearchLink = document.getElementById('nav-ai-search');
@@ -1070,21 +822,48 @@
 
 
             navLinkItems.forEach(link => {
+                // Exclude submenu toggles from direct active state management
+                if (link.hasAttribute('onclick') && link.getAttribute('onclick').includes('toggleSubmenu')) {
+                    return;
+                }
+
                 link.addEventListener('click', function(e) {
-                    e.preventDefault(); 
+                    // Allow submenu toggles to proceed without preventing default
+                    if (!(this.hasAttribute('onclick') && this.getAttribute('onclick').includes('toggleSubmenu'))) {
+                        e.preventDefault(); 
+                    }
                     
                     navLinkItems.forEach(navLink => {
+                        // Clear active state from all items, including parent of submenu items
                         navLink.classList.remove('active', 'bg-gray-800', 'text-white');
-                        const icon = navLink.querySelector('i');
+                        const icon = navLink.querySelector('i:first-child'); // Target only the main icon
                         if (icon) {
                             icon.classList.remove('text-blue-400');
                         }
+                        // If it's a submenu parent, also reset its chevron icon
+                        const chevron = navLink.querySelector('.fa-chevron-down, .fa-chevron-up');
+                        if (chevron && !navLink.nextElementSibling?.classList.contains('active')) { // only if submenu is not active
+                           // chevron.classList.remove('text-blue-400'); // if you want chevron to also change color
+                        }
                     });
                     
+                    // Set active state for the clicked item
                     this.classList.add('active', 'bg-gray-800', 'text-white');
-                    const icon = this.querySelector('i');
+                    const icon = this.querySelector('i:first-child');
                     if (icon) {
                         icon.classList.add('text-blue-400');
+                    }
+
+                    // If the clicked item is a submenu item, also style its parent
+                    if (this.closest('.submenu')) {
+                        const parentNavItem = this.closest('.submenu').previousElementSibling;
+                        if (parentNavItem && parentNavItem.classList.contains('nav-item')) {
+                             parentNavItem.classList.add('active', 'bg-gray-800', 'text-white');
+                             const parentIcon = parentNavItem.querySelector('i:first-child');
+                             if (parentIcon) {
+                                parentIcon.classList.add('text-blue-400');
+                             }
+                        }
                     }
                 });
             });
@@ -1095,11 +874,6 @@
                     homeContent.classList.remove('hidden');
                     iframeContainer.classList.add('hidden');
                     iframeContainer.innerHTML = ''; 
-                    // Re-initialize map if needed, or ensure it's only initialized once
-                    // and just shown/hidden. For simplicity, current initKavachMap handles re-init protection.
-                    if (homeContent && !homeContent.classList.contains('hidden')) {
-                        initKavachMap();
-                    }
                 });
             }
 
@@ -1126,12 +900,8 @@
                 setTimeout(() => {
                     card.style.opacity = '1';
                     card.style.transform = 'translateY(0)';
-                }, 1000);
+                }, 1000); 
             });
-            
-            if (homeContent && !homeContent.classList.contains('hidden')) {
-                 initKavachMap();
-            }
             
             setTimeout(() => {
                 const loadingPlaceholder = document.getElementById('loading-placeholder');
@@ -1147,121 +917,13 @@
             
             submenu.classList.toggle('active');
             icon.classList.toggle('rotate-180');
+
         }
         
         function openModule(moduleName) {
             alert(`Opening ${moduleName} module...`);
         }
         
-        function initKavachMap() {
-            const mapElement = document.getElementById('kavach-map');
-            if (mapElement && !mapElement._leaflet_id) { 
-                const map = L.map('kavach-map'); // Don't setView here, fitBounds will do it
-                
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                }).addTo(map);
-                
-                const allMarkersGroup = L.featureGroup(); // To collect all markers for fitting bounds
-
-                // Helper function to create map pin icons
-                const createPinIcon = (tailwindColorClass, tailwindSizeClass = 'text-2xl') => L.divIcon({
-                    html: `<i class="fas fa-map-marker-alt ${tailwindSizeClass} ${tailwindColorClass}"></i>`,
-                    className: 'bg-transparent border-none', // Prevents default L.divIcon styling
-                    iconSize: tailwindSizeClass === 'text-2xl' ? [22, 30] : [19, 25], // Approx: W,H for 24px/20px pins
-                    iconAnchor: tailwindSizeClass === 'text-2xl' ? [11, 30] : [10, 25]  // Bottom-center
-                });
-                
-                const completedIcon = createPinIcon('text-green-500');
-                const inProgressIcon = createPinIcon('text-yellow-500');
-                const pendingIcon = createPinIcon('text-red-500');
-                const stationaryUnitIcon = createPinIcon('text-blue-600', 'text-xl'); // Smaller pin for stationary units
-                
-                // Existing Kavach Division Data (Demo)
-                const kavachData = [
-                    { name: "Delhi Division", lat: 28.6139, lng: 77.2090, status: "completed", locos: 1250, routes: 8 },
-                    { name: "Mumbai Division", lat: 19.0760, lng: 72.8777, status: "completed", locos: 980, routes: 6 },
-                    { name: "Chennai Division", lat: 13.0827, lng: 80.2707, status: "in-progress", locos: 750, routes: 5 },
-                    { name: "Kolkata Division", lat: 22.5726, lng: 88.3639, status: "in-progress", locos: 680, routes: 4 },
-                ];
-                                
-                kavachData.forEach(division => {
-                    let icon;
-                    if (division.status === "completed") icon = completedIcon;
-                    else if (division.status === "in-progress") icon = inProgressIcon;
-                    else icon = pendingIcon;
-                    
-                    const marker = L.marker([division.lat, division.lng], { icon: icon })
-                        .bindPopup(`
-                            <div class="font-bold text-lg">${division.name}</div>
-                            <div class="mt-2">
-                                <div class="flex items-center">
-                                    <span class="w-3 h-3 rounded-full mr-2 ${division.status === 'completed' ? 'bg-green-500' : division.status === 'in-progress' ? 'bg-yellow-500' : 'bg-red-500'}"></span>
-                                    <span>${division.status === 'completed' ? 'Completed' : division.status === 'in-progress' ? 'In Progress' : 'Pending'}</span>
-                                </div>
-                                <div class="mt-1">Locomotives: <span class="font-bold">${division.locos}</span></div>
-                                <div class="mt-1">Routes: <span class="font-bold">${division.routes}</span></div>
-                            </div>
-                        `);
-                    allMarkersGroup.addLayer(marker);
-                });
-
-                const locationsFromFile = parseTsvData(locationTsvData);
-                
-                locationsFromFile.forEach(location => {
-                    const lat = parseFloat(location['Stationary_Unit_Tower_Lattitude']);
-                    const lon = parseFloat(location['Stationary_Unit_Tower_Longitude']);
-                    const name = location['Name'];
-
-                    if (!isNaN(lat) && !isNaN(lon)) {
-                        const marker = L.marker([lat, lon], { icon: stationaryUnitIcon })
-                            .bindPopup(`
-                                <div class="font-bold text-md">${name}</div>
-                                <div class="text-sm">Lat: ${lat.toFixed(4)}, Lon: ${lon.toFixed(4)}</div>
-                            `);
-                        allMarkersGroup.addLayer(marker);
-                    } else {
-                        console.warn(`Invalid coordinates for location: ${name}`);
-                    }
-                });
-                
-                map.addLayer(allMarkersGroup); // Add all markers to the map
-
-                if (allMarkersGroup.getLayers().length > 0) {
-                    map.fitBounds(allMarkersGroup.getBounds().pad(0.1)); // Fit map to show all markers with a little padding
-                } else {
-                    map.setView([20.5937, 78.9629], 5); // Fallback if no markers
-                }
-                
-                const legend = L.control({ position: 'bottomright' });
-                
-                legend.onAdd = function(map) {
-                    const div = L.DomUtil.create('div', 'legend');
-                    div.innerHTML = `
-                        <h4 class="font-bold mb-2">Map Legend</h4>
-                        <div class="flex items-center mb-1">
-                            <i class="fas fa-map-marker-alt text-green-500" style="font-size: 1.1em; width: 20px; text-align: center;"></i>
-                            <span class="ml-1 text-xs">Kavach Division (Completed)</span>
-                        </div>
-                        <div class="flex items-center mb-1">
-                            <i class="fas fa-map-marker-alt text-yellow-500" style="font-size: 1.1em; width: 20px; text-align: center;"></i>
-                            <span class="ml-1 text-xs">Kavach Division (In Progress)</span>
-                        </div>
-                        <div class="flex items-center mb-1">
-                            <i class="fas fa-map-marker-alt text-red-500" style="font-size: 1.1em; width: 20px; text-align: center;"></i>
-                            <span class="ml-1 text-xs">Kavach Division (Pending)</span>
-                        </div>
-                        <div class="flex items-center">
-                            <i class="fas fa-map-marker-alt text-blue-600" style="font-size: 1em; width: 20px; text-align: center;"></i>
-                            <span class="ml-1 text-xs">Stationary Unit/Tower</span>
-                        </div>
-                    `;
-                    return div;
-                };
-                
-                legend.addTo(map);
-            }
-        }
     </script>
 </body>
 </html>
