@@ -133,7 +133,7 @@
         
         .dashboard-card {
             animation: cardEnter 0.5s ease-out forwards;
-            animation-delay: calc(var(--order) * 0.1s);
+            animation-delay: calc(var(--order) * 0.1s); /* This will default to 0s if --order is not set on an element */
             transform: translateY(20px);
             opacity: 0;
             transition: all 0.3s ease;
@@ -142,15 +142,14 @@
         }
         
         .dashboard-card:hover {
-            transform: translateY(-5px) rotateX(5deg);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            /* Default hover for general dashboard cards if needed, but module items have their own */
         }
         
-        .dashboard-card:hover .card-icon {
+        .dashboard-card:hover .card-icon { /* This was for older, larger card icons */
             animation: pulse 1.5s infinite;
         }
         
-        .card-icon {
+        .card-icon { /* This was for older, larger card icons */
             transition: all 0.3s ease;
         }
         
@@ -264,19 +263,16 @@
         
         /* #kavach-map is no longer needed as it's replaced by an iframe */
         
-        .module-card {
-            transition: all 0.3s ease;
+        .module-card { /* General class for clickable module items, specific hover is now Tailwind */
+            transition: all 0.3s ease; /* Keep for non-transform/shadow transitions if any */
             cursor: pointer;
         }
         
-        .module-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        }
-        
-        .module-icon {
-            font-size: 2rem;
-            margin-bottom: 1rem;
+        /* .module-card:hover is now primarily handled by Tailwind utility classes on the items */
+        /* Old .module-icon style can be removed if not used elsewhere */
+        .module-icon { 
+            /* font-size: 2rem; */ /* Handled by Tailwind */
+            /* margin-bottom: 1rem; */ /* Handled by Tailwind */
         }
         
         /* Legend styles might not be needed if the iframe has its own legend */
@@ -578,9 +574,9 @@
                     <div id="loading-placeholder" class="shimmer-bg loading-placeholder"></div>
                     
                     <!-- Container for Kavach Implementation Status and Recent Activities -->
-                    <div class="grid grid-cols-1 md:grid-cols-[11fr_4fr] gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-[11fr_4fr] gap-6 mb-6">
                         <!-- Kavach Implementation Status Card -->
-                        <div class="dashboard-card bg-white rounded-xl shadow-md p-6 mb-8 md:self-start" style="--order: 1;">
+                        <div class="dashboard-card bg-white rounded-xl shadow-md p-6 md:self-start" style="--order: 1;">
                             <div class="flex justify-between items-center mb-6">
                                 <div>
                                     <h2 class="text-xl font-bold text-gray-800">Kavach Implementation Status</h2>
@@ -590,12 +586,10 @@
                             <div class="map-container">
                                 <iframe src="https://coekavach.github.io/coegis/" style="width:100%; height:100%; border:none;" title="Kavach GIS Map"></iframe>
                             </div>
-                            
-                            <!-- Removed stats cards from here -->
                         </div>
                         
                         <!-- Recent Activities Card -->
-                        <div class="dashboard-card bg-white rounded-xl shadow-md p-6 flex flex-col mb-8" style="--order: 7;">
+                        <div class="dashboard-card bg-white rounded-xl shadow-md p-6 flex flex-col" style="--order: 2;">
                             <div class="flex justify-between items-center mb-6">
                                 <h2 class="text-xl font-bold text-gray-800">Recent Activities</h2>
                                 <button class="text-blue-600 text-sm font-medium">View All</button>
@@ -694,72 +688,43 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Module Cards -->
-                    <div class="dashboard-card bg-white rounded-xl shadow-md p-6 mb-8" style="--order: 6;">
-                        <h2 class="text-xl font-bold text-gray-800 mb-6">Modules</h2>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                            <!-- KAVACH Module -->
-                            <div class="module-card bg-blue-50 rounded-lg p-6 text-center" onclick="openModule('KAVACH')">
-                                <div class="module-icon text-blue-600">
-                                    <i class="fas fa-shield-alt"></i>
-                                </div>
-                                <h3 class="text-lg font-bold text-gray-800 mb-1">KAVACH</h3>
-                                <p class="text-sm text-gray-600">Click Here →</p>
+                    <div class="dashboard-card bg-white rounded-xl shadow-md p-4" style="--order: 3;">
+                        <div class="flex space-x-3 py-2">
+                            <div class="module-card flex-1 bg-blue-50 hover:bg-blue-100 rounded-lg px-4 py-3 flex items-center justify-center space-x-2.5 cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('KAVACH')">
+                                <div class="text-blue-600 text-xl"><i class="fas fa-shield-alt"></i></div>
+                                <h3 class="text-sm font-semibold text-gray-800">KAVACH</h3>
                             </div>
                             
-                            <!-- LTE Module -->
-                            <div class="module-card bg-green-50 rounded-lg p-6 text-center" onclick="openModule('LTE')">
-                                <div class="module-icon text-green-600">
-                                    <i class="fas fa-network-wired"></i>
-                                </div>
-                                <h3 class="text-lg font-bold text-gray-800 mb-1">LTE</h3>
-                                <p class="text-sm text-gray-600">Click Here →</p>
+                            <div class="module-card flex-1 bg-green-50 hover:bg-green-100 rounded-lg px-4 py-3 flex items-center justify-center space-x-2.5 cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('LTE')">
+                                <div class="text-green-600 text-xl"><i class="fas fa-network-wired"></i></div>
+                                <h3 class="text-sm font-semibold text-gray-800">LTE</h3>
                             </div>
                             
-                            <!-- 5G Module -->
-                            <div class="module-card bg-purple-50 rounded-lg p-6 text-center" onclick="openModule('5G')">
-                                <div class="module-icon text-purple-600">
-                                    <i class="fas fa-bolt"></i>
-                                </div>
-                                <h3 class="text-lg font-bold text-gray-800 mb-1">5G</h3>
-                                <p class="text-sm text-gray-600">Click Here →</p>
+                            <div class="module-card flex-1 bg-purple-50 hover:bg-purple-100 rounded-lg px-4 py-3 flex items-center justify-center space-x-2.5 cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('5G')">
+                                <div class="text-purple-600 text-xl"><i class="fas fa-bolt"></i></div>
+                                <h3 class="text-sm font-semibold text-gray-800">5G</h3>
                             </div>
                             
-                            <!-- 6G Module -->
-                            <div class="module-card bg-yellow-50 rounded-lg p-6 text-center" onclick="openModule('6G')">
-                                <div class="module-icon text-yellow-600">
-                                    <i class="fas fa-satellite-dish"></i>
-                                </div>
-                                <h3 class="text-lg font-bold text-gray-800 mb-1">6G</h3>
-                                <p class="text-sm text-gray-600">Click Here →</p>
+                            <div class="module-card flex-1 bg-yellow-50 hover:bg-yellow-100 rounded-lg px-4 py-3 flex items-center justify-center space-x-2.5 cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('6G')">
+                                <div class="text-yellow-600 text-xl"><i class="fas fa-satellite-dish"></i></div>
+                                <h3 class="text-sm font-semibold text-gray-800">6G</h3>
                             </div>
                             
-                            <!-- 7G Module -->
-                            <div class="module-card bg-red-50 rounded-lg p-6 text-center" onclick="openModule('7G')">
-                                <div class="module-icon text-red-600">
-                                    <i class="fas fa-atom"></i>
-                                </div>
-                                <h3 class="text-lg font-bold text-gray-800 mb-1">7G</h3>
-                                <p class="text-sm text-gray-600">Click Here →</p>
+                            <div class="module-card flex-1 bg-red-50 hover:bg-red-100 rounded-lg px-4 py-3 flex items-center justify-center space-x-2.5 cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('7G')">
+                                <div class="text-red-600 text-xl"><i class="fas fa-atom"></i></div>
+                                <h3 class="text-sm font-semibold text-gray-800">7G</h3>
                             </div>
                             
-                            <!-- ORGANISATION Module -->
-                            <div class="module-card bg-indigo-50 rounded-lg p-6 text-center" onclick="openModule('ORGANISATION')">
-                                <div class="module-icon text-indigo-600">
-                                    <i class="fas fa-sitemap"></i>
-                                </div>
-                                <h3 class="text-lg font-bold text-gray-800 mb-1">ORGANISATION</h3>
-                                <p class="text-sm text-gray-600">Click Here →</p>
+                            <div class="module-card flex-1 bg-indigo-50 hover:bg-indigo-100 rounded-lg px-4 py-3 flex items-center justify-center space-x-2.5 cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('ORGANISATION')">
+                                <div class="text-indigo-600 text-xl"><i class="fas fa-sitemap"></i></div>
+                                <h3 class="text-sm font-semibold text-gray-800">ORGANISATION</h3>
                             </div>
                             
-                            <!-- BLOG Module -->
-                            <div class="module-card bg-pink-50 rounded-lg p-6 text-center" onclick="openModule('BLOG')">
-                                <div class="module-icon text-pink-600">
-                                    <i class="fas fa-blog"></i>
-                                </div>
-                                <h3 class="text-lg font-bold text-gray-800 mb-1">BLOG</h3>
-                                <p class="text-sm text-gray-600">Click Here →</p>
+                            <div class="module-card flex-1 bg-pink-50 hover:bg-pink-100 rounded-lg px-4 py-3 flex items-center justify-center space-x-2.5 cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('BLOG')">
+                                <div class="text-pink-600 text-xl"><i class="fas fa-blog"></i></div>
+                                <h3 class="text-sm font-semibold text-gray-800">BLOG</h3>
                             </div>
                         </div>
                     </div>
@@ -897,10 +862,14 @@
             
             const cards = document.querySelectorAll('.dashboard-card');
             cards.forEach(card => {
+                 // Use the --order style property if present, otherwise default to a small delay
+                const delayOrder = card.style.getPropertyValue('--order');
+                const delay = delayOrder ? (parseInt(delayOrder, 10) * 100) : 100; // 0.1s per order or default 0.1s
+
                 setTimeout(() => {
                     card.style.opacity = '1';
                     card.style.transform = 'translateY(0)';
-                }, 1000); 
+                }, 500 + delay); // Base delay + order delay
             });
             
             setTimeout(() => {
@@ -908,20 +877,23 @@
                 if (loadingPlaceholder) {
                     loadingPlaceholder.style.display = 'none';
                 }
-            }, 800);
+            }, 800); // Ensure placeholder is hidden after initial animations might start
         });
         
         function toggleSubmenu(element) {
             const submenu = element.nextElementSibling;
-            const icon = element.querySelector('.fa-chevron-down');
+            const icon = element.querySelector('.fa-chevron-down, .fa-chevron-up'); // Selects either down or up
             
             submenu.classList.toggle('active');
-            icon.classList.toggle('rotate-180');
-
+            icon.classList.toggle('rotate-180'); // This will work for fa-chevron-down
+            // If you use fa-chevron-up when open, you might need to toggle classes:
+            // icon.classList.toggle('fa-chevron-down');
+            // icon.classList.toggle('fa-chevron-up');
         }
         
         function openModule(moduleName) {
             alert(`Opening ${moduleName} module...`);
+            // Placeholder for actual module opening logic, e.g., navigating to a new page or showing a modal.
         }
         
     </script>
