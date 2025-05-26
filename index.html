@@ -314,9 +314,9 @@
         }
         
         .loading-placeholder {
-            height: 100px;
+            height: 100px; /* Adjusted height for the module placeholder */
             border-radius: 8px;
-            margin-bottom: 20px;
+            margin-bottom: 20px; /* Space before next content loads */
         }
         
         .scrolling-container {
@@ -570,154 +570,144 @@
             <div id="page-content-area" class="flex-1 overflow-y-auto relative"> 
                 <!-- Dashboard Content (Home) -->
                 <main id="home-content" class="p-8">
-                    <!-- Loading Placeholder (removed after content loads) -->
-                    <div id="loading-placeholder" class="shimmer-bg loading-placeholder"></div>
-                    
-                    <!-- Module Cards -->
-                    <div class="dashboard-card bg-white rounded-xl shadow-md p-4 mb-6" style="--order: 1;">
-                        <div class="flex space-x-3 py-2">
-                            <div class="module-card flex-1 bg-blue-50 hover:bg-blue-100 rounded-lg px-4 py-3 flex items-center justify-center space-x-2.5 cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('KAVACH')">
-                                <div class="text-blue-600 text-xl"><i class="fas fa-shield-alt"></i></div>
-                                <h3 class="text-sm font-semibold text-gray-800">KAVACH</h3>
-                            </div>
-                            
-                            <div class="module-card flex-1 bg-green-50 hover:bg-green-100 rounded-lg px-4 py-3 flex items-center justify-center space-x-2.5 cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('LTE')">
-                                <div class="text-green-600 text-xl"><i class="fas fa-network-wired"></i></div>
-                                <h3 class="text-sm font-semibold text-gray-800">LTE</h3>
-                            </div>
-                            
-                            <div class="module-card flex-1 bg-purple-50 hover:bg-purple-100 rounded-lg px-4 py-3 flex items-center justify-center space-x-2.5 cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('5G')">
-                                <div class="text-purple-600 text-xl"><i class="fas fa-bolt"></i></div>
-                                <h3 class="text-sm font-semibold text-gray-800">5G</h3>
-                            </div>
-                            
-                            <div class="module-card flex-1 bg-yellow-50 hover:bg-yellow-100 rounded-lg px-4 py-3 flex items-center justify-center space-x-2.5 cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('6G')">
-                                <div class="text-yellow-600 text-xl"><i class="fas fa-satellite-dish"></i></div>
-                                <h3 class="text-sm font-semibold text-gray-800">6G</h3>
-                            </div>
-                            
-                            <div class="module-card flex-1 bg-red-50 hover:bg-red-100 rounded-lg px-4 py-3 flex items-center justify-center space-x-2.5 cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('7G')">
-                                <div class="text-red-600 text-xl"><i class="fas fa-atom"></i></div>
-                                <h3 class="text-sm font-semibold text-gray-800">7G</h3>
-                            </div>
-                            
-                            <div class="module-card flex-1 bg-indigo-50 hover:bg-indigo-100 rounded-lg px-4 py-3 flex items-center justify-center space-x-2.5 cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('ORGANISATION')">
-                                <div class="text-indigo-600 text-xl"><i class="fas fa-sitemap"></i></div>
-                                <h3 class="text-sm font-semibold text-gray-800">ORGANISATION</h3>
-                            </div>
-                            
-                            <div class="module-card flex-1 bg-pink-50 hover:bg-pink-100 rounded-lg px-4 py-3 flex items-center justify-center space-x-2.5 cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('BLOG')">
-                                <div class="text-pink-600 text-xl"><i class="fas fa-blog"></i></div>
-                                <h3 class="text-sm font-semibold text-gray-800">BLOG</h3>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Container for Kavach Implementation Status and Recent Activities -->
+                    <!-- Loading Placeholder (initial placeholder removed as content is now structured within the grid) -->
+                                     
+                    <!-- Container for Modules, Kavach Implementation Status, and Recent Activities -->
                     <div class="grid grid-cols-1 md:grid-cols-[11fr_4fr] gap-6">
-                        <!-- Kavach Implementation Status Card -->
-                        <div class="dashboard-card bg-white rounded-xl shadow-md p-6 mb-8 md:self-start" style="--order: 2;">
-                            <div class="flex justify-between items-center mb-6">
-                                <div>
-                                    <h2 class="text-xl font-bold text-gray-800">Kavach Implementation Status</h2>
+                        
+                        <!-- Left Column: Modules and Kavach Status -->
+                        <div>
+                            <!-- Loading Placeholder for Modules (removed after content loads) -->
+                            <div id="loading-placeholder-modules" class="shimmer-bg loading-placeholder"></div>
+
+                            <!-- Module Cards -->
+                            <div id="module-cards-container" class="dashboard-card bg-white rounded-xl shadow-md p-4 mb-6 hidden" style="--order: 1;">
+                                <div class="flex space-x-3 py-2">
+                                    <div class="module-card flex-1 bg-blue-50 hover:bg-blue-100 rounded-lg px-4 py-3 flex items-center justify-center space-x-2.5 cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('KAVACH')">
+                                        <div class="text-blue-600 text-xl"><i class="fas fa-shield-alt"></i></div>
+                                        <h3 class="text-sm font-semibold text-gray-800">KAVACH</h3>
+                                    </div>
+                                    
+                                    <div class="module-card flex-1 bg-green-50 hover:bg-green-100 rounded-lg px-4 py-3 flex items-center justify-center space-x-2.5 cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('LTE')">
+                                        <div class="text-green-600 text-xl"><i class="fas fa-network-wired"></i></div>
+                                        <h3 class="text-sm font-semibold text-gray-800">LTE</h3>
+                                    </div>
+                                    
+                                    <div class="module-card flex-1 bg-purple-50 hover:bg-purple-100 rounded-lg px-4 py-3 flex items-center justify-center space-x-2.5 cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('5G')">
+                                        <div class="text-purple-600 text-xl"><i class="fas fa-bolt"></i></div>
+                                        <h3 class="text-sm font-semibold text-gray-800">5G</h3>
+                                    </div>
+                                    
+                                    <div class="module-card flex-1 bg-yellow-50 hover:bg-yellow-100 rounded-lg px-4 py-3 flex items-center justify-center space-x-2.5 cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('6G')">
+                                        <div class="text-yellow-600 text-xl"><i class="fas fa-satellite-dish"></i></div>
+                                        <h3 class="text-sm font-semibold text-gray-800">6G</h3>
+                                    </div>
+                                    
+                                    <div class="module-card flex-1 bg-red-50 hover:bg-red-100 rounded-lg px-4 py-3 flex items-center justify-center space-x-2.5 cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('7G')">
+                                        <div class="text-red-600 text-xl"><i class="fas fa-atom"></i></div>
+                                        <h3 class="text-sm font-semibold text-gray-800">7G</h3>
+                                    </div>
+                                    
+                                    <div class="module-card flex-1 bg-indigo-50 hover:bg-indigo-100 rounded-lg px-4 py-3 flex items-center justify-center space-x-2.5 cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('ORGANISATION')">
+                                        <div class="text-indigo-600 text-xl"><i class="fas fa-sitemap"></i></div>
+                                        <h3 class="text-sm font-semibold text-gray-800">ORGANISATION</h3>
+                                    </div>
+                                    
+                                    <div class="module-card flex-1 bg-pink-50 hover:bg-pink-100 rounded-lg px-4 py-3 flex items-center justify-center space-x-2.5 cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('BLOG')">
+                                        <div class="text-pink-600 text-xl"><i class="fas fa-blog"></i></div>
+                                        <h3 class="text-sm font-semibold text-gray-800">BLOG</h3>
+                                    </div>
                                 </div>
                             </div>
-                            
-                            <div class="map-container">
-                                <iframe src="https://coekavach.github.io/coegis/" style="width:100%; height:100%; border:none;" title="Kavach GIS Map"></iframe>
+
+                            <!-- Loading Placeholder for Kavach Map (removed after content loads) -->
+                            <div id="loading-placeholder-map" class="shimmer-bg loading-placeholder" style="height: 560px;"></div>
+
+                            <!-- Kavach Implementation Status Card -->
+                            <div id="kavach-status-container" class="dashboard-card bg-white rounded-xl shadow-md p-6 md:self-start hidden" style="--order: 2;">
+                                <div class="flex justify-between items-center mb-6">
+                                    <div>
+                                        <h2 class="text-xl font-bold text-gray-800">Kavach Implementation Status</h2>
+                                    </div>
+                                </div>
+                                
+                                <div class="map-container">
+                                    <iframe src="https://coekavach.github.io/coegis/" style="width:100%; height:100%; border:none;" title="Kavach GIS Map"></iframe>
+                                </div>
                             </div>
                         </div>
                         
-                        <!-- Recent Activities Card -->
-                        <div class="dashboard-card bg-white rounded-xl shadow-md p-6 flex flex-col mb-8" style="--order: 3;">
+                        <!-- Right Column: Recent Activities Card -->
+                         <!-- Loading Placeholder for Recent Activities (removed after content loads) -->
+                        <div id="loading-placeholder-activities" class="shimmer-bg loading-placeholder" style="height: 560px;"></div>
+
+                        <div id="recent-activities-container" class="dashboard-card bg-white rounded-xl shadow-md p-6 flex flex-col hidden" style="--order: 3;">
                             <div class="flex justify-between items-center mb-6">
                                 <h2 class="text-xl font-bold text-gray-800">Recent Activities</h2>
                                 <button class="text-blue-600 text-sm font-medium">View All</button>
                             </div>
                             
-                            <div class="scrolling-container" style="height: 500px;">
+                            <div class="scrolling-container" style="height: 500px;"> <!-- Fixed height for scrolling content -->
                                 <div class="activity-list space-y-4">
+                                    <!-- Activity items repeated for scrolling effect -->
                                     <div class="flex items-start p-3 rounded-lg bg-blue-50 border-l-4 border-blue-500">
-                                        <div class="mr-3 text-blue-500">
-                                            <i class="fas fa-train"></i>
-                                        </div>
+                                        <div class="mr-3 text-blue-500"><i class="fas fa-train"></i></div>
                                         <div>
                                             <p class="font-medium text-gray-800">Kavach installed on 15 new locomotives</p>
                                             <p class="text-sm text-gray-600">Northern Railway Zone</p>
                                             <p class="text-xs text-gray-500 mt-1">2 hours ago</p>
                                         </div>
                                     </div>
-                                    
                                     <div class="flex items-start p-3 rounded-lg bg-green-50 border-l-4 border-green-500">
-                                        <div class="mr-3 text-green-500">
-                                            <i class="fas fa-check-circle"></i>
-                                        </div>
+                                        <div class="mr-3 text-green-500"><i class="fas fa-check-circle"></i></div>
                                         <div>
                                             <p class="font-medium text-gray-800">Testing completed for LTE integration</p>
                                             <p class="text-sm text-gray-600">Eastern Railway Zone</p>
                                             <p class="text-xs text-gray-500 mt-1">5 hours ago</p>
                                         </div>
                                     </div>
-                                    
                                     <div class="flex items-start p-3 rounded-lg bg-yellow-50 border-l-4 border-yellow-500">
-                                        <div class="mr-3 text-yellow-500">
-                                            <i class="fas fa-exclamation-triangle"></i>
-                                        </div>
+                                        <div class="mr-3 text-yellow-500"><i class="fas fa-exclamation-triangle"></i></div>
                                         <div>
                                             <p class="font-medium text-gray-800">Maintenance required for 5G test equipment</p>
                                             <p class="text-sm text-gray-600">Research & Development</p>
                                             <p class="text-xs text-gray-500 mt-1">1 day ago</p>
                                         </div>
                                     </div>
-                                    
                                     <div class="flex items-start p-3 rounded-lg bg-purple-50 border-l-4 border-purple-500">
-                                        <div class="mr-3 text-purple-500">
-                                            <i class="fas fa-users"></i>
-                                        </div>
+                                        <div class="mr-3 text-purple-500"><i class="fas fa-users"></i></div>
                                         <div>
                                             <p class="font-medium text-gray-800">New training session scheduled for engineers</p>
                                             <p class="text-sm text-gray-600">Human Resources</p>
                                             <p class="text-xs text-gray-500 mt-1">2 days ago</p>
                                         </div>
                                     </div>
-                                    
-                                    <div class="flex items-start p-3 rounded-lg bg-blue-50 border-l-4 border-blue-500">
-                                        <div class="mr-3 text-blue-500">
-                                            <i class="fas fa-train"></i>
-                                        </div>
+                                     <div class="flex items-start p-3 rounded-lg bg-blue-50 border-l-4 border-blue-500">
+                                        <div class="mr-3 text-blue-500"><i class="fas fa-train"></i></div>
                                         <div>
                                             <p class="font-medium text-gray-800">Kavach installed on 15 new locomotives</p>
                                             <p class="text-sm text-gray-600">Northern Railway Zone</p>
                                             <p class="text-xs text-gray-500 mt-1">2 hours ago</p>
                                         </div>
                                     </div>
-                                    
                                     <div class="flex items-start p-3 rounded-lg bg-green-50 border-l-4 border-green-500">
-                                        <div class="mr-3 text-green-500">
-                                            <i class="fas fa-check-circle"></i>
-                                        </div>
+                                        <div class="mr-3 text-green-500"><i class="fas fa-check-circle"></i></div>
                                         <div>
                                             <p class="font-medium text-gray-800">Testing completed for LTE integration</p>
                                             <p class="text-sm text-gray-600">Eastern Railway Zone</p>
                                             <p class="text-xs text-gray-500 mt-1">5 hours ago</p>
                                         </div>
                                     </div>
-                                    
                                     <div class="flex items-start p-3 rounded-lg bg-yellow-50 border-l-4 border-yellow-500">
-                                        <div class="mr-3 text-yellow-500">
-                                            <i class="fas fa-exclamation-triangle"></i>
-                                        </div>
+                                        <div class="mr-3 text-yellow-500"><i class="fas fa-exclamation-triangle"></i></div>
                                         <div>
                                             <p class="font-medium text-gray-800">Maintenance required for 5G test equipment</p>
                                             <p class="text-sm text-gray-600">Research & Development</p>
                                             <p class="text-xs text-gray-500 mt-1">1 day ago</p>
                                         </div>
                                     </div>
-                                    
                                     <div class="flex items-start p-3 rounded-lg bg-purple-50 border-l-4 border-purple-500">
-                                        <div class="mr-3 text-purple-500">
-                                            <i class="fas fa-users"></i>
-                                        </div>
+                                        <div class="mr-3 text-purple-500"><i class="fas fa-users"></i></div>
                                         <div>
                                             <p class="font-medium text-gray-800">New training session scheduled for engineers</p>
                                             <p class="text-sm text-gray-600">Human Resources</p>
@@ -773,8 +763,6 @@
         return gk_fileData[filename] || "";
         }
         
-        // locationTsvData and parseTsvData are no longer needed as Leaflet map is removed.
-
         document.addEventListener('DOMContentLoaded', function() {
             const navLinkItems = document.querySelectorAll('nav a.nav-item, nav div.nav-item'); 
             const homeLink = document.getElementById('nav-home');
@@ -785,41 +773,43 @@
             const iframeContainer = document.getElementById('iframe-container');
             const mainAppHeader = document.getElementById('main-app-header');
 
+            const loadingPlaceholderModules = document.getElementById('loading-placeholder-modules');
+            const moduleCardsContainer = document.getElementById('module-cards-container');
+            
+            const loadingPlaceholderMap = document.getElementById('loading-placeholder-map');
+            const kavachStatusContainer = document.getElementById('kavach-status-container');
+
+            const loadingPlaceholderActivities = document.getElementById('loading-placeholder-activities');
+            const recentActivitiesContainer = document.getElementById('recent-activities-container');
+
 
             navLinkItems.forEach(link => {
-                // Exclude submenu toggles from direct active state management
                 if (link.hasAttribute('onclick') && link.getAttribute('onclick').includes('toggleSubmenu')) {
                     return;
                 }
 
                 link.addEventListener('click', function(e) {
-                    // Allow submenu toggles to proceed without preventing default
                     if (!(this.hasAttribute('onclick') && this.getAttribute('onclick').includes('toggleSubmenu'))) {
                         e.preventDefault(); 
                     }
                     
                     navLinkItems.forEach(navLink => {
-                        // Clear active state from all items, including parent of submenu items
                         navLink.classList.remove('active', 'bg-gray-800', 'text-white');
-                        const icon = navLink.querySelector('i:first-child'); // Target only the main icon
+                        const icon = navLink.querySelector('i:first-child');
                         if (icon) {
                             icon.classList.remove('text-blue-400');
                         }
-                        // If it's a submenu parent, also reset its chevron icon
                         const chevron = navLink.querySelector('.fa-chevron-down, .fa-chevron-up');
-                        if (chevron && !navLink.nextElementSibling?.classList.contains('active')) { // only if submenu is not active
-                           // chevron.classList.remove('text-blue-400'); // if you want chevron to also change color
+                        if (chevron && !navLink.nextElementSibling?.classList.contains('active')) { 
                         }
                     });
                     
-                    // Set active state for the clicked item
                     this.classList.add('active', 'bg-gray-800', 'text-white');
                     const icon = this.querySelector('i:first-child');
                     if (icon) {
                         icon.classList.add('text-blue-400');
                     }
 
-                    // If the clicked item is a submenu item, also style its parent
                     if (this.closest('.submenu')) {
                         const parentNavItem = this.closest('.submenu').previousElementSibling;
                         if (parentNavItem && parentNavItem.classList.contains('nav-item')) {
@@ -860,40 +850,50 @@
                 });
             }
             
-            const cards = document.querySelectorAll('.dashboard-card');
-            cards.forEach(card => {
-                 // Use the --order style property if present, otherwise default to a small delay
-                const delayOrder = card.style.getPropertyValue('--order');
-                const delay = delayOrder ? (parseInt(delayOrder, 10) * 100) : 100; // 0.1s per order or default 0.1s
+            // Content loading simulation
+            // Order: Modules (1), Kavach Map (2), Activities (3)
+            const baseDelay = 500; // Initial delay before anything starts showing
 
-                setTimeout(() => {
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, 500 + delay); // Base delay + order delay
-            });
+            setTimeout(() => {
+                if (loadingPlaceholderModules) loadingPlaceholderModules.style.display = 'none';
+                if (moduleCardsContainer) {
+                    moduleCardsContainer.classList.remove('hidden');
+                    // Trigger animation for the card itself
+                    moduleCardsContainer.style.opacity = '1';
+                    moduleCardsContainer.style.transform = 'translateY(0)';
+                }
+            }, baseDelay + (1 * 100)); // order 1
+
+            setTimeout(() => {
+                if (loadingPlaceholderMap) loadingPlaceholderMap.style.display = 'none';
+                if (kavachStatusContainer) {
+                    kavachStatusContainer.classList.remove('hidden');
+                    kavachStatusContainer.style.opacity = '1';
+                    kavachStatusContainer.style.transform = 'translateY(0)';
+                }
+            }, baseDelay + (2 * 100)); // order 2
             
             setTimeout(() => {
-                const loadingPlaceholder = document.getElementById('loading-placeholder');
-                if (loadingPlaceholder) {
-                    loadingPlaceholder.style.display = 'none';
+                if (loadingPlaceholderActivities) loadingPlaceholderActivities.style.display = 'none';
+                if (recentActivitiesContainer) {
+                    recentActivitiesContainer.classList.remove('hidden');
+                    recentActivitiesContainer.style.opacity = '1';
+                    recentActivitiesContainer.style.transform = 'translateY(0)';
                 }
-            }, 800); // Ensure placeholder is hidden after initial animations might start
+            }, baseDelay + (3 * 100)); // order 3
+
         });
         
         function toggleSubmenu(element) {
             const submenu = element.nextElementSibling;
-            const icon = element.querySelector('.fa-chevron-down, .fa-chevron-up'); // Selects either down or up
+            const icon = element.querySelector('.fa-chevron-down, .fa-chevron-up');
             
             submenu.classList.toggle('active');
-            icon.classList.toggle('rotate-180'); // This will work for fa-chevron-down
-            // If you use fa-chevron-up when open, you might need to toggle classes:
-            // icon.classList.toggle('fa-chevron-down');
-            // icon.classList.toggle('fa-chevron-up');
+            icon.classList.toggle('rotate-180');
         }
         
         function openModule(moduleName) {
             alert(`Opening ${moduleName} module...`);
-            // Placeholder for actual module opening logic, e.g., navigating to a new page or showing a modal.
         }
         
     </script>
