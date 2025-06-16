@@ -570,7 +570,33 @@
             <div id="page-content-area" class="flex-1 overflow-y-auto relative"> 
                 <!-- Dashboard Content (Home) -->
                 <main id="home-content" class="p-8">
-                    <!-- Loading Placeholder (initial placeholder removed as content is now structured within the grid) -->
+                    <!-- Search Knowledgebase Card -->
+                    <div class="dashboard-card bg-white rounded-xl shadow-md p-6 mb-6" style="--order: 0;">
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                            <div class="relative flex-1">
+                                <input type="text" placeholder="Search knowledge base..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <select class="border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option>All Categories</option>
+                                    <option>Kavach</option>
+                                    <option>LTE</option>
+                                    <option>5G</option>
+                                    <option>Organisation</option>
+                                </select>
+                                <select class="border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option>Sort by: Recent</option>
+                                    <option>Sort by: Popular</option>
+                                    <option>Sort by: Alphabetical</option>
+                                </select>
+                                <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200 flex items-center space-x-2">
+                                    <i class="fas fa-plus"></i>
+                                    <span>New Article</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                                      
                     <!-- Container for Modules, Kavach Implementation Status, and Recent Activities -->
                     <div class="grid grid-cols-1 md:grid-cols-[11fr_4fr] gap-6">
