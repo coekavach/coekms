@@ -1,43 +1,4 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -609,60 +570,60 @@
                             <!-- Module Cards -->
                             <div id="module-cards-container" class="dashboard-card bg-white rounded-xl shadow-md p-4 mb-6 hidden" style="--order: 1;">
                                 <div class="flex space-x-3 py-2">
-                                    <div class="module-card flex-1 bg-blue-50 hover:bg-blue-100 rounded-lg px-4 py-3 flex items-center justify-between cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('KAVACH')">
+                                    <div class="module-card flex-1 bg-[#e1f0f4] hover:bg-[#d2e8ee] rounded-lg px-4 py-3 flex items-center justify-between cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('KAVACH')">
                                         <div class="flex items-center space-x-2.5">
-                                            <div class="text-blue-600 text-xl"><i class="fas fa-shield-alt"></i></div>
+                                            <div class="text-[#588999] text-xl"><i class="fas fa-shield-alt"></i></div>
                                             <h3 class="text-sm font-semibold text-gray-800">KAVACH</h3>
                                         </div>
-                                        <div class="bg-blue-200 text-blue-800 rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">70</div>
+                                        <div class="bg-[#ABD3DE] text-[#3A5A64] rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">70</div>
                                     </div>
                                     
-                                    <div class="module-card flex-1 bg-green-50 hover:bg-green-100 rounded-lg px-4 py-3 flex items-center justify-between cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('LTE')">
+                                    <div class="module-card flex-1 bg-[#e5f2e2] hover:bg-[#d8ebd2] rounded-lg px-4 py-3 flex items-center justify-between cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('LTE')">
                                         <div class="flex items-center space-x-2.5">
-                                            <div class="text-green-600 text-xl"><i class="fas fa-network-wired"></i></div>
+                                            <div class="text-[#698c5f] text-xl"><i class="fas fa-network-wired"></i></div>
                                             <h3 class="text-sm font-semibold text-gray-800">LTE</h3>
                                         </div>
-                                        <div class="bg-green-200 text-green-800 rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">45</div>
+                                        <div class="bg-[#BDDAB1] text-[#455c3e] rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">45</div>
                                     </div>
                                     
-                                    <div class="module-card flex-1 bg-purple-50 hover:bg-purple-100 rounded-lg px-4 py-3 flex items-center justify-between cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('5G')">
+                                    <div class="module-card flex-1 bg-[#f3f4e2] hover:bg-[#eaebda] rounded-lg px-4 py-3 flex items-center justify-between cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('5G')">
                                         <div class="flex items-center space-x-2.5">
-                                            <div class="text-purple-600 text-xl"><i class="fas fa-bolt"></i></div>
+                                            <div class="text-[#8f9260] text-xl"><i class="fas fa-bolt"></i></div>
                                             <h3 class="text-sm font-semibold text-gray-800">5G</h3>
                                         </div>
-                                        <div class="bg-purple-200 text-purple-800 rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">12</div>
+                                        <div class="bg-[#DEE1B2] text-[#5d603f] rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">12</div>
                                     </div>
                                     
-                                    <div class="module-card flex-1 bg-yellow-50 hover:bg-yellow-100 rounded-lg px-4 py-3 flex items-center justify-between cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('6G')">
+                                    <div class="module-card flex-1 bg-[#fcf8ef] hover:bg-[#f9f3e6] rounded-lg px-4 py-3 flex items-center justify-between cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('6G')">
                                         <div class="flex items-center space-x-2.5">
-                                            <div class="text-yellow-600 text-xl"><i class="fas fa-satellite-dish"></i></div>
+                                            <div class="text-[#a79d81] text-xl"><i class="fas fa-satellite-dish"></i></div>
                                             <h3 class="text-sm font-semibold text-gray-800">6G</h3>
                                         </div>
-                                        <div class="bg-yellow-200 text-yellow-800 rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">3</div>
+                                        <div class="bg-[#F7EDD1] text-[#746c56] rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">3</div>
                                     </div>
                                     
-                                    <div class="module-card flex-1 bg-red-50 hover:bg-red-100 rounded-lg px-4 py-3 flex items-center justify-between cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('7G')">
+                                    <div class="module-card flex-1 bg-[#e1f0f4] hover:bg-[#d2e8ee] rounded-lg px-4 py-3 flex items-center justify-between cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('7G')">
                                         <div class="flex items-center space-x-2.5">
-                                            <div class="text-red-600 text-xl"><i class="fas fa-atom"></i></div>
+                                            <div class="text-[#588999] text-xl"><i class="fas fa-atom"></i></div>
                                             <h3 class="text-sm font-semibold text-gray-800">7G</h3>
                                         </div>
-                                        <div class="bg-red-200 text-red-800 rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">0</div>
+                                        <div class="bg-[#ABD3DE] text-[#3A5A64] rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">0</div>
                                     </div>
                                     
-                                    <div class="module-card flex-1 bg-indigo-50 hover:bg-indigo-100 rounded-lg px-4 py-3 flex items-center justify-between cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('ORGANISATION')">
+                                    <div class="module-card flex-1 bg-[#e5f2e2] hover:bg-[#d8ebd2] rounded-lg px-4 py-3 flex items-center justify-between cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('ORGANISATION')">
                                         <div class="flex items-center space-x-2.5">
-                                            <div class="text-indigo-600 text-xl"><i class="fas fa-sitemap"></i></div>
+                                            <div class="text-[#698c5f] text-xl"><i class="fas fa-sitemap"></i></div>
                                             <h3 class="text-sm font-semibold text-gray-800">ORGANISATION</h3>
                                         </div>
-                                        <div class="bg-indigo-200 text-indigo-800 rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">110</div>
+                                        <div class="bg-[#BDDAB1] text-[#455c3e] rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">110</div>
                                     </div>
                                     
-                                    <div class="module-card flex-1 bg-pink-50 hover:bg-pink-100 rounded-lg px-4 py-3 flex items-center justify-between cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('BLOG')">
+                                    <div class="module-card flex-1 bg-[#f3f4e2] hover:bg-[#eaebda] rounded-lg px-4 py-3 flex items-center justify-between cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('BLOG')">
                                         <div class="flex items-center space-x-2.5">
-                                            <div class="text-pink-600 text-xl"><i class="fas fa-blog"></i></div>
+                                            <div class="text-[#8f9260] text-xl"><i class="fas fa-blog"></i></div>
                                             <h3 class="text-sm font-semibold text-gray-800">BLOG</h3>
                                         </div>
-                                        <div class="bg-pink-200 text-pink-800 rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">18</div>
+                                        <div class="bg-[#DEE1B2] text-[#5d603f] rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">18</div>
                                     </div>
                                 </div>
                             </div>
@@ -696,48 +657,54 @@
                             
                             <div class="scrolling-container" style="height: 500px; overflow-y: auto; overflow-x: hidden;">
                                 <div class="space-y-4">
-                                    <!-- Activity items (single set) -->
-                                    <div class="flex items-start p-4 rounded-lg bg-blue-50 hover:bg-blue-100 border-l-4 border-blue-500 shadow-sm hover:shadow-md transition-all duration-200">
-                                        <div class="mr-3 text-blue-600 pt-1 text-lg"><i class="fas fa-train"></i></div>
+                                    <div class="flex items-start p-4 rounded-lg bg-[#e1f0f4] hover:bg-[#d2e8ee] border-l-4 border-[#588999] shadow-sm hover:shadow-md transition-all duration-200">
+                                        <div class="mr-3 text-[#588999] pt-1 text-lg"><i class="fas fa-train"></i></div>
                                         <div>
                                             <p class="font-semibold text-gray-800">Kavach installed on 15 new locomotives</p>
                                             <p class="text-sm text-gray-600">Northern Railway Zone</p>
                                             <p class="text-xs text-gray-500 mt-1">2 hours ago</p>
                                         </div>
                                     </div>
-                                    <div class="flex items-start p-4 rounded-lg bg-green-50 hover:bg-green-100 border-l-4 border-green-500 shadow-sm hover:shadow-md transition-all duration-200">
-                                        <div class="mr-3 text-green-600 pt-1 text-lg"><i class="fas fa-check-circle"></i></div>
+                                    <div class="flex items-start p-4 rounded-lg bg-[#e5f2e2] hover:bg-[#d8ebd2] border-l-4 border-[#698c5f] shadow-sm hover:shadow-md transition-all duration-200">
+                                        <div class="mr-3 text-[#698c5f] pt-1 text-lg"><i class="fas fa-check-circle"></i></div>
                                         <div>
                                             <p class="font-semibold text-gray-800">Testing completed for LTE integration</p>
                                             <p class="text-sm text-gray-600">Eastern Railway Zone</p>
                                             <p class="text-xs text-gray-500 mt-1">5 hours ago</p>
                                         </div>
                                     </div>
-                                    <div class="flex items-start p-4 rounded-lg bg-yellow-50 hover:bg-yellow-100 border-l-4 border-yellow-500 shadow-sm hover:shadow-md transition-all duration-200">
-                                        <div class="mr-3 text-yellow-600 pt-1 text-lg"><i class="fas fa-exclamation-triangle"></i></div>
+                                    <div class="flex items-start p-4 rounded-lg bg-[#f3f4e2] hover:bg-[#eaebda] border-l-4 border-[#8f9260] shadow-sm hover:shadow-md transition-all duration-200">
+                                        <div class="mr-3 text-[#8f9260] pt-1 text-lg"><i class="fas fa-exclamation-triangle"></i></div>
                                         <div>
                                             <p class="font-semibold text-gray-800">Maintenance required for 5G test equipment</p>
                                             <p class="text-sm text-gray-600">Research & Development</p>
                                             <p class="text-xs text-gray-500 mt-1">1 day ago</p>
                                         </div>
                                     </div>
-                                    <div class="flex items-center p-4 rounded-lg bg-gray-50 hover:bg-gray-100 border-l-4 border-gray-400 shadow-sm hover:shadow-md transition-all duration-200">
-                                        <img src="https://randomuser.me/api/portraits/men/34.jpg" alt="User" class="w-10 h-10 rounded-full mr-4">
+                                    <div class="flex items-start p-4 rounded-lg bg-[#e1f0f4] hover:bg-[#d2e8ee] border-l-4 border-[#588999] shadow-sm hover:shadow-md transition-all duration-200">
+                                        <div class="mr-3 text-[#588999] pt-1 text-lg"><i class="fas fa-train"></i></div>
                                         <div>
-                                            <p class="font-semibold text-gray-800"><span class="font-bold">Anil Singh</span> scheduled a new training session.</p>
-                                            <p class="text-sm text-gray-600">Human Resources</p>
-                                            <p class="text-xs text-gray-500 mt-1">2 days ago</p>
+                                            <p class="font-semibold text-gray-800">Kavach installed on 15 new locomotives</p>
+                                            <p class="text-sm text-gray-600">Northern Railway Zone</p>
+                                            <p class="text-xs text-gray-500 mt-1">2 hours ago</p>
                                         </div>
                                     </div>
-                                     <div class="flex items-center p-4 rounded-lg bg-gray-50 hover:bg-gray-100 border-l-4 border-gray-400 shadow-sm hover:shadow-md transition-all duration-200">
-                                        <img src="https://randomuser.me/api/portraits/women/50.jpg" alt="User" class="w-10 h-10 rounded-full mr-4">
+                                    <div class="flex items-start p-4 rounded-lg bg-[#e5f2e2] hover:bg-[#d8ebd2] border-l-4 border-[#698c5f] shadow-sm hover:shadow-md transition-all duration-200">
+                                        <div class="mr-3 text-[#698c5f] pt-1 text-lg"><i class="fas fa-check-circle"></i></div>
                                         <div>
-                                            <p class="font-semibold text-gray-800"><span class="font-bold">Sunita Rao</span> uploaded a new document.</p>
-                                            <p class="text-sm text-gray-600">Engineering Dept</p>
-                                            <p class="text-xs text-gray-500 mt-1">3 days ago</p>
+                                            <p class="font-semibold text-gray-800">Testing completed for LTE integration</p>
+                                            <p class="text-sm text-gray-600">Eastern Railway Zone</p>
+                                            <p class="text-xs text-gray-500 mt-1">5 hours ago</p>
                                         </div>
                                     </div>
-                                    <!-- Duplicated set REMOVED -->
+                                    <div class="flex items-start p-4 rounded-lg bg-[#f3f4e2] hover:bg-[#eaebda] border-l-4 border-[#8f9260] shadow-sm hover:shadow-md transition-all duration-200">
+                                        <div class="mr-3 text-[#8f9260] pt-1 text-lg"><i class="fas fa-exclamation-triangle"></i></div>
+                                        <div>
+                                            <p class="font-semibold text-gray-800">Maintenance required for 5G test equipment</p>
+                                            <p class="text-sm text-gray-600">Research & Development</p>
+                                            <p class="text-xs text-gray-500 mt-1">1 day ago</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
