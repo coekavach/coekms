@@ -3,822 +3,874 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kavach Library</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
+    <title>KMS: Knowledge Management System - Kavach</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Leaflet CSS and JS are no longer needed as the map is replaced by an iframe -->
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Merriweather', serif;
-            color: #4a3b31;
-            line-height: 1.6;
-            background: linear-gradient(rgba(245, 240, 225, 0.92), rgba(245, 240, 225, 0.92)),
-                        url('https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&w=1920&q=80');
-            background-size: cover;
-            background-position: center center;
-            background-attachment: fixed;
-            background-repeat: no-repeat;
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            80% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
         }
         
-        /* Modified Main Header Styles for minimal vertical space */
-        .main-header {
-            text-align: center;
-            margin-bottom: 20px; /* Reduced */
-            padding-bottom: 15px; /* Reduced */
-            border-bottom: 1px solid #D7C6B7;
+        @keyframes underlineExpand {
+            0% { width: 0; }
+            100% { width: 100%; }
         }
-
-        .main-header h1 {
-            font-family: 'Lora', serif;
-            font-size: 32px; /* Reduced */
-            font-weight: 700;
-            color: #5C3D2E;
-            margin-bottom: 2px; /* Reduced significantly */
-            line-height: 1.2; /* Tightened line height */
+        
+        @keyframes cardEnter {
+            0% { transform: translateY(20px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
         }
-
-        .main-header p {
-            font-family: 'Merriweather', serif;
-            font-size: 17px; /* Reduced */
-            color: #7A6A5D;
-            font-style: italic;
-            line-height: 1.2; /* Tightened line height */
-            margin-bottom: 0;
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 25px 20px;
+        
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
         }
-
-        /* Global Search Styles */
-        .global-search-container {
-            background-color: #F0EBE3;
-            padding: 15px 20px;
-            margin-bottom: 20px;
-            border-radius: 6px;
-            border: 1px solid #D7C6B7;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        
+        @keyframes slideInFromTop {
+            0% { transform: translateY(-50px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
         }
-
-        .global-search-container .filter-group {
-            margin-bottom: 0;
+        
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
         }
-
-        .global-search-container label {
-            font-family: 'Lora', serif;
-            font-size: 14px; /* Slightly larger for global search */
-            font-weight: 600;
-            color: #6B4F40;
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+        
+        /* @keyframes scrollUp {  REMOVED
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-50%); }
+        } */
+        
+        .logo-animate {
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
-        .global-search-container .filter-input {
-             width: 100%; /* Make global search input take full width of its container */
-        }
-
-
-        /* Tab Styles */
-        .tabs-navigation {
-            display: flex;
-            margin-bottom: 0;
-            border-bottom: 3px solid #5C3D2E;
-            background-color: #6B4F40;
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
-            padding-top: 5px;
-            box-shadow: 0 3px 7px rgba(0,0,0,0.2), inset 0 1px 2px rgba(255,255,255,0.1);
-        }
-
-        .tab-button {
-            padding: 14px 28px;
-            cursor: pointer;
-            border: none;
-            background-color: transparent;
-            font-family: 'Lora', serif;
-            font-size: 17px;
-            font-weight: 500;
-            color: #E0D6CC;
-            border-bottom: 4px solid transparent;
-            margin-bottom: -3px;
-            transition: color 0.2s, background-color 0.2s, border-bottom-color 0.2s;
+        
+        .header-underline {
             position: relative;
-            border-right: 1px solid #5C3D2E;
-        }
-        .tab-button:last-child {
-            border-right: none;
-        }
-
-        .tab-button:hover {
-            color: #fff;
-            background-color: #8E7463;
-        }
-
-        .tab-button.active {
-            color: #fff;
-            background-color: #8E7463;
-            border-bottom-color: #D4AF37;
-            font-weight: 600;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
         }
         
-        .tab-record-count {
-            font-size: 13px;
-            color: #E0D6CC;
-            margin-left: 8px;
-            font-weight: 400;
-            display: inline-block;
-            transition: color 0.2s;
-        }
-
-        .tab-button.active .tab-record-count {
-            color: #fff;
-        }
-
-
-        .tab-pane {
-            display: none;
-            background: #FAF6F0;
-            padding: 25px;
-            border: 1px solid #D7C6B7;
-            border-top: none;
-            border-bottom-left-radius: 8px;
-            border-bottom-right-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        .tab-pane.active {
-            display: block;
+        .header-underline::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            height: 3px;
+            background: #3b82f6;
+            animation: underlineExpand 0.8s ease-out forwards;
         }
         
-         /* General Header styles (used within tabs) */
-        .header {
-            background: #F0EBE3;
-            padding: 20px;
-            border-radius: 6px;
-            margin-bottom: 25px;
-            border: 1px solid #D7C6B7;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        .nav-item {
+            position: relative;
+            transition: all 0.3s ease;
         }
-
-        .header h1 {
-            font-family: 'Lora', serif;
-            font-size: 26px;
-            color: #5C3D2E;
-            margin-bottom: 8px;
-            font-weight: 600;
+        
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #3b82f6;
+            transition: width 0.3s ease;
         }
-
-        .header p {
-            color: #7A6A5D;
-            font-size: 15px;
-            font-style: italic;
+        
+        .nav-item:hover::after {
+            width: 100%;
         }
-
-        .filter-group { /* General filter group, also used by Global Search */
-            display: flex;
-            flex-direction: column;
+        
+        .nav-item.active::after {
+            width: 100%;
         }
-
-        .filter-group label { /* General filter label */
-            font-family: 'Lora', serif;
-            font-size: 13px;
-            font-weight: 600;
-            color: #6B4F40;
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+        
+        .dashboard-card {
+            animation: cardEnter 0.5s ease-out forwards;
+            animation-delay: calc(var(--order) * 0.1s); /* This will default to 0s if --order is not set on an element */
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+            perspective: 1000px;
         }
-
-        .filter-input { /* General filter input */
-            padding: 10px 14px;
-            border: 1px solid #C5B5A5;
-            border-radius: 4px;
-            font-size: 14px;
-            font-family: 'Merriweather', serif;
-            background: #fff;
-            color: #4a3b31;
-            transition: border-color 0.2s, box-shadow 0.2s;
+        
+        .dashboard-card:hover {
+            /* Default hover for general dashboard cards if needed, but module items have their own */
         }
-
-        .filter-input:focus {
-            outline: none;
-            border-color: #8E7463;
-            box-shadow: 0 0 0 3px rgba(142, 116, 99, 0.2);
+        
+        .dashboard-card:hover .card-icon { /* This was for older, larger card icons */
+            animation: pulse 1.5s infinite;
         }
-
-        .status {
-            padding: 14px 18px;
-            border-radius: 4px;
-            margin-bottom: 25px;
-            font-size: 14px;
-            border: 1px solid;
+        
+        .card-icon { /* This was for older, larger card icons */
+            transition: all 0.3s ease;
         }
-
-        .status.loading { background: #fff8e1; color: #795548; border-color: #ffecb3; }
-        .status.success { background: #e8f5e9; color: #2e7d32; border-color: #c8e6c9; }
-        .status.error { background: #ffebee; color: #8c2a2a; border-color: #ffcdd2; }
-
-        .table-container {
-            background: #fffdf7;
-            border-radius: 6px;
+        
+        .shine-effect {
+            position: relative;
             overflow: hidden;
-            border: 1px solid #D7C6B7;
         }
-
-        #kmpTab .table-container, #rdsoTab .table-container, #rbTab .table-container {
-             box-shadow: 0 2px 5px rgba(0,0,0,0.07);
-        }
-
-        .table-header {
-            padding: 16px 20px;
-            background: #E0D6CC;
-            border-bottom: 2px solid #BCAAA4;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .table-title {
-            font-family: 'Lora', serif;
-            font-weight: 600;
-            color: #5C3D2E;
-            font-size: 16px;
-        }
-
-        .record-count { font-size: 14px; color: #7A6A5D; font-style: italic; }
-        .table-wrapper { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; }
-
-        thead th {
-            background: #A47F6A;
-            padding: 14px 18px;
-            text-align: left;
-            font-family: 'Lora', serif;
-            font-weight: 600;
-            font-size: 14px;
-            color: #FDF6E3;
-            border-bottom: 2px solid #6B4F40;
-            white-space: nowrap;
-        }
-
-        tbody td {
-            padding: 12px 18px;
-            border-bottom: 1px solid #E0D6CC;
-            vertical-align: top;
-            font-size: 13.5px;
-            color: #4a3b31;
-        }
-
-        tbody tr:hover { background: #F0EBE3; }
-        tbody tr:nth-child(even) { background-color: #fbf8f2; }
-        tbody tr:nth-child(even):hover { background: #E9E2D8; }
-
-        .subject-cell { max-width: 300px; word-wrap: break-word; line-height: 1.5; }
-        .simple-table-subject-cell { max-width: 450px; word-wrap: break-word; line-height: 1.5; }
-
-        .file-link { color: #00695c; text-decoration: none; font-size: 13.5px; font-weight: 500; }
-        .file-link:hover { text-decoration: underline; color: #004d40; }
-        .no-data { text-align: center; padding: 40px; color: #7A6A5D; font-style: italic; }
-
-        .error-solutions { margin-top: 20px; padding: 20px; background: #fff8e1; border: 1px solid #ffecb3; border-radius: 4px;}
-        .error-solutions h4 { color: #795548; margin-bottom: 10px; font-family: 'Lora', serif; }
-        .error-solutions ol { color: #795548; margin-left: 20px; }
-
-        .sample-btn {
-            background: #558b2f; color: white; border: 1px solid #33691e; padding: 9px 18px;
-            border-radius: 4px; cursor: pointer; font-size: 13px; font-family: 'Lora', serif;
-            margin-top: 15px; box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-        }
-        .sample-btn:hover { background: #33691e; box-shadow: 0 2px 3px rgba(0,0,0,0.15); }
         
-        .footer-attribution {
-            text-align: center;
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid #D7C6B7;
-            font-size: 14px;
-            color: #7A6A5D;
-            font-style: italic;
+        .shine-effect::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 200%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.13);
+            background: linear-gradient(
+                to right,
+                rgba(255, 255, 255, 0.13) 0%,
+                rgba(255, 255, 255, 0.13) 77%,
+                rgba(255, 255, 255, 0.5) 92%,
+                rgba(255, 255, 255, 0.0) 100%
+            );
+            transform: rotate(30deg);
+            transition: all 0.4s ease;
+            opacity: 0;
         }
-
-        @media (max-width: 992px) {
-            /* Responsive styles remain */
+        
+        .shine-effect:hover::after {
+            left: 100%;
+            opacity: 1;
+            transition-property: left, opacity;
+            transition-duration: 0.7s, 0.15s;
+            transition-timing-function: ease;
         }
-
-        @media (max-width: 768px) {
-            body { background-attachment: scroll; }
-            #kmpTab .table-header { flex-direction: column; align-items: flex-start; gap: 8px; }
-            .subject-cell { max-width: 200px; }
-            .simple-table-subject-cell { max-width: 250px; }
-            thead th, tbody td { padding: 10px 14px; font-size: 12.5px; }
-
-            .tabs-navigation { flex-direction: column; border-bottom: none; border-top-right-radius: 8px; border-top-left-radius: 8px; }
-            .tab-button { border-bottom: 1px solid #5C3D2E; margin-bottom: 0; border-right: none; border-radius: 0; }
-            .tab-button.active { border-bottom-color: #D4AF37; border-bottom-width:3px; }
-            .tab-button:last-child { border-bottom: none; }
-            .tab-button.active:last-child { border-bottom: 3px solid #D4AF37; }
-            .tab-pane { border-top-left-radius: 0; border-top-right-radius: 0; border-top: 1px solid #D7C6B7; }
+        
+        .signal-green {
+            background-color: #10b981;
+            box-shadow: 0 0 10px #10b981;
         }
+        
+        .signal-yellow {
+            background-color: #f59e0b;
+            box-shadow: 0 0 10px #f59e0b;
+        }
+        
+        .signal-red {
+            background-color: #ef4444;
+            box-shadow: 0 0 10px #ef4444;
+        }
+        
+        .signal-light {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+        
+        .progress-bar {
+            height: 6px;
+            border-radius: 3px;
+            background-color: #e5e7eb;
+            overflow: hidden;
+        }
+        
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.6s ease;
+        }
+        
+        .delay-indicator {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #ef4444;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        
+        .submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        
+        .submenu.active {
+            max-height: 500px;
+        }
+        
+        .submenu-item {
+            padding-left: 2.5rem;
+        }
+        
+        .map-container {
+            position: relative;
+            width: 100%;
+            height: 500px; /* This height will be applied to the iframe parent */
+            background-color: #f0f4f8;
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+        
+        /* #kavach-map is no longer needed as it's replaced by an iframe */
+        
+        .module-card { /* General class for clickable module items, specific hover is now Tailwind */
+            transition: all 0.3s ease; /* Keep for non-transform/shadow transitions if any */
+            cursor: pointer;
+        }
+        
+        /* .module-card:hover is now primarily handled by Tailwind utility classes on the items */
+        /* Old .module-icon style can be removed if not used elsewhere */
+        .module-icon { 
+            /* font-size: 2rem; */ /* Handled by Tailwind */
+            /* margin-bottom: 1rem; */ /* Handled by Tailwind */
+        }
+        
+        /* Legend styles might not be needed if the iframe has its own legend */
+        .legend {
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            line-height: 1.5;
+            color: #555;
+        }
+        
+        .legend i {
+            opacity: 0.9;
+        }
+        
+        .info {
+            padding: 6px 8px;
+            font: 14px/16px Arial, Helvetica, sans-serif;
+            background: white;
+            background: rgba(255,255,255,0.8);
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            border-radius: 5px;
+        }
+        
+        .page-load-animation {
+            animation: slideInFromTop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        
+        .status-bar-animation {
+            animation: fadeIn 1s ease-out 0.5s forwards;
+            opacity: 0;
+        }
+        
+        .shimmer-bg {
+            background: linear-gradient(to right, #eff1f3 4%, #e2e2e2 25%, #eff1f3 36%);
+            background-size: 1000px 100%;
+            animation: shimmer 1.5s infinite linear;
+        }
+        
+        .loading-placeholder {
+            height: 100px; /* Adjusted height for the module placeholder */
+            border-radius: 8px;
+            margin-bottom: 20px; /* Space before next content loads */
+        }
+        
+        .scrolling-container {
+            /* height: 100%; REMOVED flex-1 and height: 100% from here, will be set inline for fixed height */
+            /* overflow: hidden;  Will be set inline */
+            position: relative;
+        }
+        
+        /* .activity-list {  REMOVED
+            animation: scrollUp 25s linear infinite;
+        } */
     </style>
 </head>
-<body>
-    <div class="container">
-        <!-- Main Page Header -->
-        <div class="main-header">
-            <h1>Kavach Library</h1>
-            <p>Center of Excellence - Kavach</p>
-        </div>
-
-        <!-- Global Search Bar -->
-        <div class="global-search-container">
-            <div class="filter-group">
-                <label for="globalSearchInput">Search All Documents</label>
-                <input type="text" class="filter-input" placeholder="Keywords, numbers, dates..." id="globalSearchInput">
+<body class="bg-gray-100 font-sans">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <div class="w-64 bg-gray-900 text-gray-300 flex flex-col">
+            <!-- Logo -->
+            <div class="p-6 flex items-center justify-center">
+                <div class="logo-animate">
+                    <div class="flex items-center">
+                        <i class="fas fa-train text-blue-400 text-3xl mr-3"></i>
+                        <span class="text-2xl font-bold text-white">KMS<span class="text-blue-400">Kavach</span></span>
+                    </div>
+                </div>
             </div>
-        </div>
-
-        <!-- Tab Navigation -->
-        <div class="tabs-navigation">
-            <button id="kmpTabButton" class="tab-button active" onclick="openTab(event, 'kmpTab')">CoE Kavach<span class="tab-record-count"></span></button>
-            <button id="rdsoTabButton" class="tab-button" onclick="openTab(event, 'rdsoTab')">RDSO<span class="tab-record-count"></span></button>
-            <button id="rbTabButton" class="tab-button" onclick="openTab(event, 'rbTab')">Railway Board<span class="tab-record-count"></span></button>
-        </div>
-
-        <!-- Tab Content Panes -->
-        <div id="kmpTab" class="tab-pane active">
             
-            <!-- Refresh button and its container have been removed -->
-
-            <div class="status" id="statusKMP" style="display: none;"></div>
-
-            <div class="table-container">
-                <div class="table-header">
-                    <div class="table-title">KMP Document Archive</div>
-                    <div class="record-count" id="recordCountKMP">0 records</div>
-                </div>
-                <div class="table-wrapper">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Letter Number</th>
-                                <th>Subject</th>
-                                <th>File</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tableBodyKMP">
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <div id="rdsoTab" class="tab-pane">
-            <div class="table-container">
-                <div class="table-header">
-                    <div class="table-title">RDSO Letters & Specifications</div>
-                    <div class="record-count" id="recordCountRDSO">0 records</div>
-                </div>
-                <div class="table-wrapper">
-                    <table id="rdsoDataTable">
-                        <thead>
-                            <tr>
-                                <th>Document Title</th>
-                                <th>Date</th>
-                                <th>Subject / Details</th>
-                            </tr>
-                        </thead>
-                        <tbody id="rdsoTableBody"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <div id="rbTab" class="tab-pane">
-            <div class="table-container">
-                 <div class="table-header">
-                    <div class="table-title">Railway Board Circulars</div>
-                    <div class="record-count" id="recordCountRB">0 records</div>
-                </div>
-                <div class="table-wrapper">
-                    <table id="rbDataTable">
-                        <thead>
-                            <tr>
-                                <th>Letter No.</th>
-                                <th>Date</th>
-                                <th>Subject</th>
-                            </tr>
-                        </thead>
-                        <tbody id="rbTableBody"></tbody>
-                    </table>
+            <!-- Navigation -->
+            <nav class="flex-1 px-4 py-6">
+                <ul class="space-y-1">
+                    <li>
+                        <a href="#" id="nav-home" class="nav-item active flex items-center px-4 py-3 rounded-lg text-white bg-gray-800">
+                            <i class="fas fa-home mr-3 text-blue-400"></i>
+                            <span>Home</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-item flex items-center px-4 py-3 rounded-lg hover:bg-gray-800 hover:text-white">
+                            <i class="fas fa-mobile-alt mr-3"></i>
+                            <span>App & Portal</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-item flex items-center px-4 py-3 rounded-lg hover:bg-gray-800 hover:text-white">
+                            <i class="fas fa-newspaper mr-3"></i>
+                            <span>Blogs</span>
+                        </a>
+                    </li>
+                    <li>
+                        <div class="nav-item flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-800 hover:text-white cursor-pointer" onclick="toggleSubmenu(this)">
+                            <div class="flex items-center">
+                                <i class="fas fa-database mr-3"></i>
+                                <span>Masters</span>
+                            </div>
+                            <i class="fas fa-chevron-down text-xs transition-transform duration-300"></i>
+                        </div>
+                        <ul class="submenu pl-2">
+                            <li>
+                                <a href="#" class="nav-item flex items-center px-4 py-2 rounded-lg hover:bg-gray-800 hover:text-white submenu-item">
+                                    <i class="fas fa-circle-notch mr-2 text-xs"></i>
+                                    <span>Master 1</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="nav-item flex items-center px-4 py-2 rounded-lg hover:bg-gray-800 hover:text-white submenu-item">
+                                    <i class="fas fa-circle-notch mr-2 text-xs"></i>
+                                    <span>Master 2</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-item flex items-center px-4 py-3 rounded-lg hover:bg-gray-800 hover:text-white">
+                            <i class="fas fa-upload mr-3"></i>
+                            <span>Uploads</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-item flex items-center px-4 py-3 rounded-lg hover:bg-gray-800 hover:text-white">
+                            <i class="fas fa-chart-bar mr-3"></i>
+                            <span>Reports</span>
+                        </a>
+                    </li>
+                    <li>
+                        <div class="nav-item flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-800 hover:text-white cursor-pointer" onclick="toggleSubmenu(this)">
+                            <div class="flex items-center">
+                                <i class="fas fa-chart-pie mr-3"></i>
+                                <span>Overview</span>
+                            </div>
+                            <i class="fas fa-chevron-down text-xs transition-transform duration-300"></i>
+                        </div>
+                        <ul class="submenu pl-2">
+                            <li>
+                                <a href="#" class="nav-item flex items-center px-4 py-2 rounded-lg hover:bg-gray-800 hover:text-white submenu-item">
+                                    <i class="fas fa-circle-notch mr-2 text-xs"></i>
+                                    <span>Overview 1</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="nav-item flex items-center px-4 py-2 rounded-lg hover:bg-gray-800 hover:text-white submenu-item">
+                                    <i class="fas fa-circle-notch mr-2 text-xs"></i>
+                                    <span>Overview 2</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="nav-item flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-800 hover:text-white cursor-pointer" onclick="toggleSubmenu(this)">
+                            <div class="flex items-center">
+                                <i class="fas fa-blog mr-3"></i>
+                                <span>Manage Blog</span>
+                            </div>
+                            <i class="fas fa-chevron-down text-xs transition-transform duration-300"></i>
+                        </div>
+                        <ul class="submenu pl-2">
+                            <li>
+                                <a href="#" class="nav-item flex items-center px-4 py-2 rounded-lg hover:bg-gray-800 hover:text-white submenu-item">
+                                    <i class="fas fa-circle-notch mr-2 text-xs"></i>
+                                    <span>Blog Categories</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="nav-item flex items-center px-4 py-2 rounded-lg hover:bg-gray-800 hover:text-white submenu-item">
+                                    <i class="fas fa-circle-notch mr-2 text-xs"></i>
+                                    <span>Blog Posts</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="nav-item flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-800 hover:text-white cursor-pointer" onclick="toggleSubmenu(this)">
+                            <div class="flex items-center">
+                                <i class="fas fa-sitemap mr-3"></i>
+                                <span>Manage Org</span>
+                            </div>
+                            <i class="fas fa-chevron-down text-xs transition-transform duration-300"></i>
+                        </div>
+                        <ul class="submenu pl-2">
+                            <li>
+                                <a href="#" class="nav-item flex items-center px-4 py-2 rounded-lg hover:bg-gray-800 hover:text-white submenu-item">
+                                    <i class="fas fa-circle-notch mr-2 text-xs"></i>
+                                    <span>Departments</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="nav-item flex items-center px-4 py-2 rounded-lg hover:bg-gray-800 hover:text-white submenu-item">
+                                    <i class="fas fa-circle-notch mr-2 text-xs"></i>
+                                    <span>Employees</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="nav-item flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-800 hover:text-white cursor-pointer" onclick="toggleSubmenu(this)">
+                            <div class="flex items-center">
+                                <i class="fas fa-photo-video mr-3"></i>
+                                <span>Manage Multimedia</span>
+                            </div>
+                            <i class="fas fa-chevron-down text-xs transition-transform duration-300"></i>
+                        </div>
+                        <ul class="submenu pl-2">
+                            <li>
+                                <a href="#" class="nav-item flex items-center px-4 py-2 rounded-lg hover:bg-gray-800 hover:text-white submenu-item">
+                                    <i class="fas fa-circle-notch mr-2 text-xs"></i>
+                                    <span>Images</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="nav-item flex items-center px-4 py-2 rounded-lg hover:bg-gray-800 hover:text-white submenu-item">
+                                    <i class="fas fa-circle-notch mr-2 text-xs"></i>
+                                    <span>Videos</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="nav-item flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-800 hover:text-white cursor-pointer" onclick="toggleSubmenu(this)">
+                            <div class="flex items-center">
+                                <i class="fas fa-link mr-3"></i>
+                                <span>Manage Link</span>
+                            </div>
+                            <i class="fas fa-chevron-down text-xs transition-transform duration-300"></i>
+                        </div>
+                        <ul class="submenu pl-2">
+                            <li>
+                                <a href="#" class="nav-item flex items-center px-4 py-2 rounded-lg hover:bg-gray-800 hover:text-white submenu-item">
+                                    <i class="fas fa-circle-notch mr-2 text-xs"></i>
+                                    <span>Internal Links</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="nav-item flex items-center px-4 py-2 rounded-lg hover:bg-gray-800 hover:text-white submenu-item">
+                                    <i class="fas fa-circle-notch mr-2 text-xs"></i>
+                                    <span>External Links</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#" id="nav-chatbot" class="nav-item flex items-center px-4 py-3 rounded-lg hover:bg-gray-800 hover:text-white">
+                            <i class="fas fa-robot mr-3"></i>
+                            <span>Kavach Chatbot</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" id="nav-ai-search" class="nav-item flex items-center px-4 py-3 rounded-lg hover:bg-gray-800 hover:text-white">
+                            <i class="fas fa-search mr-3"></i>
+                            <span>AI Search</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <!-- User Profile -->
+            <div class="p-4 border-t border-gray-800">
+                <div class="flex items-center">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="w-10 h-10 rounded-full">
+                    <div class="ml-3">
+                        <p class="text-white font-medium">Admin User</p>
+                        <p class="text-gray-400 text-sm">System Administrator</p>
+                    </div>
                 </div>
             </div>
         </div>
         
-        <div class="footer-attribution">
-            <p>Built by Center of Excellence Kavach, IRISET, Secunderabad</p>
-        </div>
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden"> <!-- flex-col for header + content-area -->
+            <!-- Header -->
+            <header id="main-app-header" class="bg-white shadow-sm shrink-0">
+                <div class="px-8 py-6">
+                    <div class="flex justify-between items-center">
+                        <div class="flex-grow text-center">
+                            <h1 class="text-3xl font-bold text-gray-800 page-load-animation">Knowledge Management System</h1>
+                            <p class="text-lg italic text-gray-600 mt-1">Center of Excellence - Kavach</p>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <div class="relative">
+                                <i class="fas fa-bell text-gray-500 text-xl"></i>
+                                <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+                            </div>
+                            <div class="relative">
+                                <i class="fas fa-envelope text-gray-500 text-xl"></i>
+                                <span class="absolute top-0 right-0 w-2 h-2 bg-blue-500 rounded-full"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Page Content Wrapper (takes remaining space) -->
+            <div id="page-content-area" class="flex-1 overflow-y-auto relative"> 
+                <!-- Dashboard Content (Home) -->
+                <main id="home-content" class="p-8">
+                    <!-- Search Knowledgebase Card -->
+                    <div class="dashboard-card bg-white rounded-xl shadow-md p-6 mb-6" style="--order: 0;">
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                            <div class="relative flex-1">
+                                <input type="text" placeholder="Search knowledge base..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <select class="border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option>All Categories</option>
+                                    <option>Kavach</option>
+                                    <option>LTE</option>
+                                    <option>5G</option>
+                                    <option>Organisation</option>
+                                </select>
+                                <select class="border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option>Sort by: Recent</option>
+                                    <option>Sort by: Popular</option>
+                                    <option>Sort by: Alphabetical</option>
+                                </select>
+                                <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200 flex items-center space-x-2">
+                                    <i class="fas fa-plus"></i>
+                                    <span>Upload Documents</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                                     
+                    <!-- Container for Modules, Kavach Implementation Status, and Letters Marked to me -->
+                    <div class="grid grid-cols-1 md:grid-cols-[11fr_4fr] gap-6">
+                        
+                        <!-- Left Column: Modules and Kavach Status -->
+                        <div>
+                            <!-- Loading Placeholder for Modules (removed after content loads) -->
+                            <div id="loading-placeholder-modules" class="shimmer-bg loading-placeholder"></div>
 
+                            <!-- Module Cards -->
+                            <div id="module-cards-container" class="dashboard-card bg-white rounded-xl shadow-md p-4 mb-6 hidden" style="--order: 1;">
+                                <div class="flex space-x-3 py-2">
+                                    <div class="module-card flex-1 bg-[#e1f0f4] hover:bg-[#d2e8ee] rounded-lg px-4 py-3 flex items-center justify-between cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('KAVACH')">
+                                        <div class="flex items-center space-x-2.5">
+                                            <div class="text-[#588999] text-xl"><i class="fas fa-shield-alt"></i></div>
+                                            <h3 class="text-sm font-semibold text-gray-800">Kavach</h3>
+                                        </div>
+                                        <div class="bg-[#ABD3DE] text-[#3A5A64] rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">70</div>
+                                    </div>
+                                    
+                                    <div class="module-card flex-1 bg-[#e5f2e2] hover:bg-[#d8ebd2] rounded-lg px-4 py-3 flex items-center justify-between cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('LTE')">
+                                        <div class="flex items-center space-x-2.5">
+                                            <div class="text-[#698c5f] text-xl"><i class="fas fa-network-wired"></i></div>
+                                            <h3 class="text-sm font-semibold text-gray-800">Telecom</h3>
+                                        </div>
+                                        <div class="bg-[#BDDAB1] text-[#455c3e] rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">45</div>
+                                    </div>
+                                    
+                                    <div class="module-card flex-1 bg-[#f3f4e2] hover:bg-[#eaebda] rounded-lg px-4 py-3 flex items-center justify-between cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('5G')">
+                                        <div class="flex items-center space-x-2.5">
+                                            <div class="text-[#8f9260] text-xl"><i class="fas fa-bolt"></i></div>
+                                            <h3 class="text-sm font-semibold text-gray-800">Virtual Assitant</h3>
+                                        </div>
+                                        <div class="bg-[#DEE1B2] text-[#5d603f] rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">12</div>
+                                    </div>
+                                    
+                                    <div class="module-card flex-1 bg-[#e1f0f4] hover:bg-[#d2e8ee] rounded-lg px-4 py-3 flex items-center justify-between cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('7G')">
+                                        <div class="flex items-center space-x-2.5">
+                                            <div class="text-[#588999] text-xl"><i class="fas fa-atom"></i></div>
+                                            <h3 class="text-sm font-semibold text-gray-800">ORGANISATION</h3>
+                                        </div>
+                                        <div class="bg-[#ABD3DE] text-[#3A5A64] rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">0</div>
+                                    </div>
+                                    
+                                    <div class="module-card flex-1 bg-[#e5f2e2] hover:bg-[#d8ebd2] rounded-lg px-4 py-3 flex items-center justify-between cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('ORGANISATION')">
+                                        <div class="flex items-center space-x-2.5">
+                                            <div class="text-[#698c5f] text-xl"><i class="fas fa-sitemap"></i></div>
+                                            <h3 class="text-sm font-semibold text-gray-800">BLOG</h3>
+                                        </div>
+                                        <div class="bg-[#BDDAB1] text-[#455c3e] rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">110</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Loading Placeholder for Kavach Map (removed after content loads) -->
+                            <div id="loading-placeholder-map" class="shimmer-bg loading-placeholder" style="height: 560px;"></div>
+
+                            <!-- Kavach Implementation Status Card -->
+                            <div id="kavach-status-container" class="dashboard-card bg-white rounded-xl shadow-md p-6 md:self-start hidden" style="--order: 2;">
+                                <div class="flex justify-between items-center mb-6">
+                                    <div>
+                                        <h2 class="text-xl font-bold text-gray-800">Kavach Installations</h2>
+                                    </div>
+                                </div>
+                                
+                                <div class="map-container">
+                                    <iframe src="https://coekavach.github.io/coegis/" style="width:100%; height:100%; border:none;" title="Kavach GIS Map"></iframe>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Right Column: Letters Marked to me Card -->
+                         <!-- Loading Placeholder for Letters Marked to me (removed after content loads) -->
+                        <div id="loading-placeholder-activities" class="shimmer-bg loading-placeholder" style="height: 560px;"></div>
+
+                        <div id="recent-activities-container" class="dashboard-card bg-white rounded-xl shadow-md p-6 flex flex-col hidden" style="--order: 3;">
+                            <div class="flex justify-between items-center mb-6">
+                                <h2 class="text-xl font-bold text-gray-800">Letters Marked to me</h2>
+                                <button class="text-blue-600 text-sm font-medium">View All</button>
+                            </div>
+                            
+                            <div class="scrolling-container" style="height: 500px; overflow-y: auto; overflow-x: hidden;">
+                                <div class="space-y-4">
+                                    <div class="flex items-start p-4 rounded-lg bg-[#e1f0f4] hover:bg-[#d2e8ee] border-l-4 border-[#588999] shadow-sm hover:shadow-md transition-all duration-200">
+                                        <div class="mr-3 text-[#588999] pt-1 text-lg"><i class="fas fa-train"></i></div>
+                                        <div>
+                                            <p class="font-semibold text-gray-800">Kavach installed on 15 new locomotives</p>
+                                            <p class="text-sm text-gray-600">Northern Railway Zone</p>
+                                            <p class="text-xs text-gray-500 mt-1">2 hours ago</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start p-4 rounded-lg bg-[#e5f2e2] hover:bg-[#d8ebd2] border-l-4 border-[#698c5f] shadow-sm hover:shadow-md transition-all duration-200">
+                                        <div class="mr-3 text-[#698c5f] pt-1 text-lg"><i class="fas fa-check-circle"></i></div>
+                                        <div>
+                                            <p class="font-semibold text-gray-800">Testing completed for LTE integration</p>
+                                            <p class="text-sm text-gray-600">Eastern Railway Zone</p>
+                                            <p class="text-xs text-gray-500 mt-1">5 hours ago</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start p-4 rounded-lg bg-[#f3f4e2] hover:bg-[#eaebda] border-l-4 border-[#8f9260] shadow-sm hover:shadow-md transition-all duration-200">
+                                        <div class="mr-3 text-[#8f9260] pt-1 text-lg"><i class="fas fa-exclamation-triangle"></i></div>
+                                        <div>
+                                            <p class="font-semibold text-gray-800">Maintenance required for 5G test equipment</p>
+                                            <p class="text-sm text-gray-600">Research & Development</p>
+                                            <p class="text-xs text-gray-500 mt-1">1 day ago</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start p-4 rounded-lg bg-[#e1f0f4] hover:bg-[#d2e8ee] border-l-4 border-[#588999] shadow-sm hover:shadow-md transition-all duration-200">
+                                        <div class="mr-3 text-[#588999] pt-1 text-lg"><i class="fas fa-train"></i></div>
+                                        <div>
+                                            <p class="font-semibold text-gray-800">Kavach installed on 15 new locomotives</p>
+                                            <p class="text-sm text-gray-600">Northern Railway Zone</p>
+                                            <p class="text-xs text-gray-500 mt-1">2 hours ago</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start p-4 rounded-lg bg-[#e5f2e2] hover:bg-[#d8ebd2] border-l-4 border-[#698c5f] shadow-sm hover:shadow-md transition-all duration-200">
+                                        <div class="mr-3 text-[#698c5f] pt-1 text-lg"><i class="fas fa-check-circle"></i></div>
+                                        <div>
+                                            <p class="font-semibold text-gray-800">Testing completed for LTE integration</p>
+                                            <p class="text-sm text-gray-600">Eastern Railway Zone</p>
+                                            <p class="text-xs text-gray-500 mt-1">5 hours ago</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start p-4 rounded-lg bg-[#f3f4e2] hover:bg-[#eaebda] border-l-4 border-[#8f9260] shadow-sm hover:shadow-md transition-all duration-200">
+                                        <div class="mr-3 text-[#8f9260] pt-1 text-lg"><i class="fas fa-exclamation-triangle"></i></div>
+                                        <div>
+                                            <p class="font-semibold text-gray-800">Maintenance required for 5G test equipment</p>
+                                            <p class="text-sm text-gray-600">Research & Development</p>
+                                            <p class="text-xs text-gray-500 mt-1">1 day ago</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+
+                <!-- Iframe Container (initially hidden, fills parent when visible) -->
+                <div id="iframe-container" class="w-full h-full hidden">
+                    <!-- Iframe will be dynamically inserted here -->
+                </div>
+            </div>
+        </div>
     </div>
 
+    <!-- Leaflet JS and related scripts are no longer needed -->
+
     <script>
-        let globalSearchTerm = '';
-        let allKMPData = [];
-        // Store parsed data and headers for RDSO and RB
-        let allRDSOData = { data: [], headers: [] };
-        let allRBData = { data: [], headers: [] };
-
-        const API_URL = 'https://coekms.in/Api/UploadData';
-
-        // --- START KMP SCRIPT ---
-        function formatDateKMP(dateString) {
-            const date = new Date(dateString);
-            return date.toLocaleDateString('en-GB');
+        // GK variables (already present)
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
         }
-
-        function getFileNameKMP(filePath) {
-            if (!filePath) return 'N/A';
-            return filePath.split('/').pop().split('_').slice(1).join('_') || 'View File';
-        }
-
-        function createKMPTableRow(item) {
-            return `
-                <tr>
-                    <td>${item.letter_date ? formatDateKMP(item.letter_date) : 'N/A'}</td>
-                    <td>${item.letter_number || 'N/A'}</td>
-                    <td class="subject-cell">${item.subject_of_letter || 'No Subject'}</td>
-                    <td>
-                        <a href="https://coekms.in/${item.upload_file}" target="_blank" class="file-link">
-                            ${getFileNameKMP(item.upload_file)}
-                        </a>
-                    </td>
-                </tr>
-            `;
-        }
-
-        function updateKMPStatus(message, type) {
-            const statusDiv = document.getElementById('statusKMP');
-            statusDiv.innerHTML = message; 
-            statusDiv.className = `status ${type}`;
-            statusDiv.style.display = 'block';
-            if (type === 'success' && !message.includes('Sample data')) {
-                setTimeout(() => { statusDiv.style.display = 'none'; }, 3000);
-            }
-        }
-
-        function updateKMPRecordCount(count) {
-            document.getElementById('recordCountKMP').textContent = `${count} record${count !== 1 ? 's' : ''}`;
-        }
-
-        async function fetchKMPData() {
-            const tableBodyKMP = document.getElementById('tableBodyKMP');
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
             try {
-                updateKMPStatus('Fetching KMP records...', 'loading');
-                let response, result;
-                try {
-                    response = await fetch(API_URL);
-                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                    result = await response.json();
-                } catch (corsError) {
-                    console.info('Direct fetch failed, attempting proxy...');
-                    const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(API_URL)}`;
-                    try {
-                        response = await fetch(proxyUrl);
-                        if (!response.ok) throw new Error(`Proxy error! status: ${response.status}`);
-                        result = await response.json();
-                    } catch (proxyError) {
-                        console.info('First proxy failed, trying alternative...');
-                        const altProxyUrl = `https://corsproxy.io/?${encodeURIComponent(API_URL)}`;
-                        response = await fetch(altProxyUrl);
-                        if (!response.ok) throw new Error(`Alternative proxy error! status: ${response.status}`);
-                        result = await response.json();
-                    }
-                }
-                if (result.success && result.data) {
-                    allKMPData = result.data;
-                    applyKMPFilters(); 
-                    if (allKMPData.length === 0 && !globalSearchTerm) {
-                         updateKMPStatus('Archive is currently empty.', 'success');
-                    } else if (allKMPData.length > 0) {
-                         updateKMPStatus(`Successfully retrieved ${allKMPData.length} records.`, 'success');
-                    }
-                } else {
-                    throw new Error(result.message || 'Invalid API response format');
-                }
-            } catch (error) {
-                console.error('Error fetching KMP data:', error);
-                let errorMessage = `Failed to load KMP records: ${error.message}`;
-                let solutions = '';
-                if (error.message.includes('NetworkError') || error.message.includes('CORS') || error.message.includes('Failed to fetch') || error.message.includes('proxy error')) {
-                    errorMessage = 'Network Error: Unable to access KMP Data API.';
-                    solutions = `<div class="error-solutions"><h4>Troubleshooting:</h4><ol><li>Check your internet connection.</li><li>The API might be temporarily unavailable or blocking requests.</li><li>If using locally, CORS policies might be an issue.</li></ol><button onclick="loadKMPSampleData()" class="sample-btn">Load Sample KMP Data</button></div>`;
-                }
-                updateKMPStatus(errorMessage + solutions, 'error');
-                tableBodyKMP.innerHTML = `<tr><td colspan="4" class="no-data">${errorMessage}${solutions}</td></tr>`;
-                updateKMPRecordCount(0);
-            } finally {
-                // Refresh button logic removed
-                updateAllTabCounts(); // Update counts after fetch completes or fails
-            }
-        }
-
-        function loadKMPSampleData() {
-            const sampleData = [
-                {"id": 143, "category": "Kavach", "subcategory": "Advisories", "priority": "Normal", "letter_date": "2025-05-07", "letter_number": "MEDHA1", "subject_of_letter": "MEDHA TEST LETTER TO COE - Sample for demonstration purposes.", "upload_file": "uploads/1748610721_Declaration.pdf"},
-                {"id": 136, "category": "LTE", "subcategory": "Advisories", "priority": "High", "letter_date": "2025-05-17", "letter_number": "TO COE", "subject_of_letter": "TO COE IRISET - Urgent review required for new LTE guidelines.", "upload_file": "uploads/1748602408_KavachTroubleshooting.pdf"},
-                {"id": 124, "category": "Kavach", "subcategory": "Layouts", "priority": "Low", "letter_date": "2025-04-25", "letter_number": "IRISET/CoE/Kavach/Misc", "subject_of_letter": "Kavach Equipment Installation Layout drawings for conventional WAG-7/ARNO/Crew/Non Crew friendly Locomotives - For archival.", "upload_file": "uploads/1748515953_SignedCoELetter.pdf"}
-            ];
-            allKMPData = sampleData;
-            applyKMPFilters();
-            updateKMPStatus('KMP Sample data loaded. This is not live data.', 'success');
-            updateAllTabCounts();
-        }
-
-        function applyKMPFilters() {
-            let filteredData = allKMPData;
-            if (globalSearchTerm) {
-                filteredData = filteredData.filter(item =>
-                    Object.values(item).some(value => value && value.toString().toLowerCase().includes(globalSearchTerm))
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
                 );
-            }
-            renderKMPTable(filteredData);
-            updateKMPRecordCount(filteredData.length);
-        }
-
-        function renderKMPTable(data) {
-            const tableBodyKMP = document.getElementById('tableBodyKMP');
-            if (data.length === 0) {
-                tableBodyKMP.innerHTML = '<tr><td colspan="4" class="no-data">No records match your current filter criteria.</td></tr>';
-            } else {
-                tableBodyKMP.innerHTML = data.map(createKMPTableRow).join('');
-            }
-        }
-        // --- END KMP SCRIPT ---
-
-        // --- START TAB SCRIPT ---
-        function openTab(event, tabName) {
-            const tabPanes = document.getElementsByClassName('tab-pane');
-            for (let i = 0; i < tabPanes.length; i++) {
-                tabPanes[i].style.display = 'none';
-                tabPanes[i].classList.remove('active');
-            }
-            const tabButtons = document.getElementsByClassName('tab-button');
-            for (let i = 0; i < tabButtons.length; i++) {
-                tabButtons[i].classList.remove('active');
-            }
-            document.getElementById(tabName).style.display = 'block';
-            document.getElementById(tabName).classList.add('active');
-            if (event && event.currentTarget) {
-                 event.currentTarget.classList.add('active');
-            } else { 
-                const buttons = document.getElementsByClassName('tab-button');
-                for (let btn of buttons) {
-                    if (btn.getAttribute('onclick').includes(`'${tabName}'`)) {
-                        btn.classList.add('active');
-                        break;
-                    }
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
                 }
-            }
-            applyGlobalSearch(); 
-        }
-        // --- END TAB SCRIPT ---
-
-        // --- START RDSO/RB & CSV SCRIPT ---
-        const rdsoCsvData = `Document Title,Date,Subject / Details,Link
-"Functional Requirement Specifications",11.04.2022,"Functional Requirement Specifications - FRS - 4",https://rdso.indianrailways.gov.in/uploads/files/Functional%20Requirements%20Specification%20of%20KAVACH%20RDSO-SPN-196-2020%20version%204-0.pdf
-"System Requirement Specification of KAVACH (The Indian Railway Automatic Train Protection System)",07.06.2024,"System Requirement Specification of KAVACH (The Indian Railway Automatic Train Protection System) - SRS - 4.0 Amdt-3",https://rdso.indianrailways.gov.in/uploads/System%20requiremnt%20specification%20amd%203%20ver%204_0.pdf
-"Specification of KAVACH (The Indian Railway ATP)-Mode Transitions, SOS and MA Handling",16.07.2024,"Specification of KAVACH (The Indian Railway ATP)-Mode Transitions, SOS and MA Handling - Annexure-A1 - 4.0, Amdt-6",https://rdso.indianrailways.gov.in/uploads/files/Annexure-A1-%20Mode%20Transition%2C%20SOS%20and%20MA%20handling%20%20%20Amdt-6%20%20%2016-07-2024%20Final%20Signed.pdf
-"Onboard KAVACH Configurable Parameters",16.07.2024,"Onboard KAVACH Configurable Parameters - Annexure-A2 - 4.0 Amdt-3",https://rdso.indianrailways.gov.in/uploads/files/Annexure-A2-Specification%20of%20%20Kavach%20(The%20Indian%20Railway%20ATP)-%20Onboard%20KAVACH%20Configurable%20Parameters%20Amdt-3%2016_07_2024%20Final%20after%20signed.pdf
-"Stationary KAVACH Configurable Parameters",16.07.2024,"Stationary KAVACH Configurable Parameters - Annexure-A3 - 4.0 Amdt. 3",https://rdso.indianrailways.gov.in/uploads/Annexure-A3-Specification%20of%20Kavach%20(The%20Indian%20Railway%20ATP)-%20Stationary%20KAVACH%20Configurable%20Parameters%20Amdt-3%2016_07_2024%20Final%20Signed.pdf
-"Loco Pilot’s Operation-cum-indication Panel (LP-OCIP (DMI)) Display Requirements",11.07.2024,"Loco Pilot’s Operation-cum-indication Panel (LP-OCIP (DMI)) Display Requirements - Annexure-B - 4.0 Amdt-3",https://rdso.indianrailways.gov.in/uploads/Annexure-B-LP-OCIP%20Display%20Requirement%20-%20Amdt-3%20Final%20Signed.pdf
-"KAVACH Multiple Access Scheme & Radio Communication Protocol",27.06.2024,"KAVACH Multiple Access Scheme & Radio Communication Protocol - Annexure-C - Version 4.0 Amdt-10",https://rdso.indianrailways.gov.in/uploads/Annexure-C-Specification%20of%20Kavach%20(The%20Indian%20Railway%20ATP)-%20Multiple%20Access%20Scheme%20%26%20Protocol%20with%20Amendment-10%2027-06-2024-2%20signed.pdf
-"KAVACH RFID Tag Data Format",07.06.2024,"KAVACH RFID Tag Data Format - Annexure-D - Version 4.0 Amdt-7",https://rdso.indianrailways.gov.in/uploads/Annexure%20-D%20Tag%20Data%20Formal%20-Amdt-7%20(1).pdf
-"KAVACH UHF Radio Modem Requirements",27.06.2024,"KAVACH UHF Radio Modem Requirements - Annexure-E1 - 4",https://rdso.indianrailways.gov.in/uploads/ANNEXURE-E1%20SPECIFICATION%20OF%20KAVACH%20(THE%20INDIAN%20RAILWAY%20ATP)-UHF%20RADIO%20MODEM%20REQUIREMENTS%20signed.pdf
-"KAVACH RFID Fixing Arrangement Guidelines",27.06.2024,"KAVACH RFID Fixing Arrangement Guidelines - Annexure-F - 4.0 Amdt. 1",https://rdso.indianrailways.gov.in/uploads/Annexure%20F-%20Specification%20of%20Kavach%20(The%20Indian%20Railway%20ATP)-%20RFID%20Tag%20and%20Fixing%20Arrangement%20Guidelines%20Amdt-1%20Signed.pdf
-"KAVACH Network Monitoring System Protocol",16.07.2024,"KAVACH Network Monitoring System Protocol - Annexure-G - 4.0, Amdt-4",https://rdso.indianrailways.gov.in/uploads/files/Annexure-G-Specification%20of%20%20Kavach%20(The%20Indian%20Railway%20ATP)-%20Network%20Monitoring%20System%20%20Protocol-Amdt-4%2016_07_2024%20Final%20Signed.pdf
-"KAVACH RFID Tag-TIN Layout Guidelines",07.06.2024,"KAVACH RFID Tag-TIN Layout Guidelines - Annexure-H - Ver. 4.0, Amdt. 5",https://rdso.indianrailways.gov.in/uploads/Annexure-H%20-KAVACH%20RFID%20Tag-TIN%20Layout%20guidelines%20Admt-5.pdf
-"KAVACH Control Table Guidelines",07.06.2024,"KAVACH Control Table Guidelines - Annexure-I - Ver. 4.0 Amdt. 6",https://rdso.indianrailways.gov.in/uploads/Final%20Annexure_I_KAVACH_TOC%20Amdt-6.pdf
-"Remote Interface Units",03.07.2024,"Remote Interface Units - Annexure-J - 4.0, Amdt.-3",https://rdso.indianrailways.gov.in/uploads/Annexure%20%E2%80%93%20J%20-Specification%20of%20KAVACH%20(The%20Indian%20Railway%20ATP)-%20Remote%20Interface%20Unit%20Amdt-3%20Signed.pdf
-"SKAVACH to SKAVACH Interface",27.06.2024,"SKAVACH to SKAVACH Interface - Annexure-P - 4.0 Amdt. 4",https://rdso.indianrailways.gov.in/uploads/Annexure-P%20-Specification%20of%20Kavach%20(The%20Indian%20Railway%20ATP)-%20S-KAVACH-%20S-KAVACH%20Interface%20Requirements%20Amdt-4%20Signed.pdf
-"KAVACH Station Master Operation and Indication Panel (SMOCIP) Requirement",16.07.2024,"KAVACH Station Master Operation and Indication Panel (SMOCIP) Requirement - Annexure-Q - 4.0 , Amdt. 1",https://rdso.indianrailways.gov.in/uploads/files/Annexure%20Q%20amd1%20Final%20Signed.pdf
-"Factory Acceptance Test format",27.01.2025,"Factory Acceptance Test format -  - SIF 0515, Ver-1.2",https://rdso.indianrailways.gov.in/uploads/2025-01-28-Final%20FAT%20Testing%20Procedure%20Ver%201_2%20Dated%2027-01-2025.pdf
-"TCAS Field Trial for Various Scenarios - Observation Format",21.12.2021,"TCAS Field Trial for Various Scenarios - Observation Format -  - 0524, Ver.-2.0",https://rdso.indianrailways.gov.in/uploads/TCAS%20SAT%20Format%2022_12_2021.pdf
-"KAVACH Interoperability Test Format for Version 4.0",28.01.2025,"KAVACH Interoperability Test Format for Version 4.0 -  - SIF 0594, Ver.-1.1",https://rdso.indianrailways.gov.in/uploads/2025-01-28-Interoperability%20Test%20Format%20for%20Version%204.pdf
-"Acceptance Test Format for KAVACH Hardware of M/s Firm’s name",08.11.2024,"Acceptance Test Format for KAVACH Hardware of M/s Firm’s name -  - RDSO/ SPN/196/2020 (VERSION 4.0)",https://rdso.indianrailways.gov.in/uploads/files/08_11_2024-Template%20Common%20Acceptance%20Test%20Format%20for%20KAVACH%20Version%204_0.pdf
-"Type Test Format for KAVACH Hardware of M/S Firm’s Name",08.11.2024,"Type Test Format for KAVACH Hardware of M/S Firm’s Name -  - RDSO/ SPN/196/2020 (VERSION 4.0)",https://rdso.indianrailways.gov.in/uploads/files/08_11_2024-Template%20Common%20Type%20test%20%20Format%20for%20KAVACH%20Version%204_0.pdf
-"Test format for UHF Radio MODEM",15.01.2025,"Test format for UHF Radio MODEM -  - SIF1505, Version 1.0",https://rdso.indianrailways.gov.in/uploads/2025-01-15-Test%20format%20Radio%20MODEM%20dated%2015_01_2025.pdf
-"Template for Pre-commissioning Checklist for Onboard KAVACH",28.04.2025,"Template for Pre-commissioning Checklist for Onboard KAVACH -  - -",https://rdso.indianrailways.gov.in/uploads/2025-04-28-Template%20for%20Pre-commissioning%20Checklist%20for%20Onboard%20%20KAVACH.pdf
-"Functional Test Format of KAVACH",06.05.2025,"Functional Test Format of KAVACH -  - SIF-0533, Ver.-4.21",https://rdso.indianrailways.gov.in/uploads/2025-05-08-Functional%20Test%20Format%20of%20KAVACH.pdf
-"Functional Test Format of DMI",06.05.2025,"Functional Test Format of DMI -  - SIF-0522, Ver.-1.4",https://rdso.indianrailways.gov.in/uploads/2025-05-08-DMI%20Functional%20Test%20Format(1).pdf
-"Functional Test Format of Event Logging",06.05.2025,"Functional Test Format of Event Logging -  - SIF-00595, Ver.-1.0",https://rdso.indianrailways.gov.in/uploads/2025-05-08-Functional%20Test%20format%20of%20event%20logger.pdf
-"Standard Operating Procedure (SOP) for Generic Product Approval of KAVACH",06.05.2025,"Standard Operating Procedure (SOP) for Generic Product Approval of KAVACH -  - Document No. 1506<br>Version 1.0",https://rdso.indianrailways.gov.in/uploads/files/2025-06-10-letter%20for%20issue%20%20Standard%20Operating%20Procedure%20(SOP)%20for%20Generic%20Product%20Approval%20of%20KAVACH%20dated%2009-05-2025.pdf
-"SITE ACCEPTANCE TEST Procedure for Stationary KAVACH (The Indian Railway Automatic Train Protection System) as per RDSO/ SPN/196/2020 Version 4.0",15.03.2024,"SITE ACCEPTANCE TEST Procedure for Stationary KAVACH (The Indian Railway Automatic Train Protection System) as per RDSO/ SPN/196/2020 Version 4.0 -  - SIF-0593 Ver 1.0",https://rdso.indianrailways.gov.in/uploads/files/20215-06-18-Site%20Acceptance%20Test%20Scheme%20for%20Stationary%20KAVACH%20(IRATP)%20Application%20Logic%20for%20Version%204-0%20-SIF-0593%20Version%201-0.pdf`;
-
-        const railwayBoardCsvData = `,,,,
-Letter No.,Date,Subject,Link
-"2023/S&T/Dev/Kavach Corres-Part (1)",11.04.2025,"Implementation of Measures Related to Kavach System.","https://indianrailways.gov.in/railwayboard/uploads/directorate/signal/2025/Implementation%20of%20Measures%20Related%20to%20Kavach%20System.pdf"
-"2024/S&T/Dev/Maintenance Policy",17.01.2025,"Streamlining of Maintenance activity for assets created under Kavach Project","https://indianrailways.gov.in/railwayboard/uploads/directorate/signal/2025/17_01_25%20Streamlining%20of%20Maintenance%20activity%20for%20assets%20created%20under%20Kavach%20Project.pdf"
-"2023/S&T/Dev/Kavach.Corres.",04.09.24,"Implementation of Kavach System on Indian Railways.","https://indianrailways.gov.in/railwayboard/uploads/directorate/signal/Implementation%20of%20Kavach%20System%20on%20Indian%20Railways.pdf"
-"2023/S&T/Dev/Kavach.Corres.",09.08.2024,"Implementation of Kavach System on Indian Railways in Mission Mode.","https://indianrailways.gov.in/railwayboard/uploads/directorate/signal/2024/Implementation%20of%20Kavach%20System%20on%20Indian%20Railways%20in%20Mission%20Mode.pdf"
-"2020/Sig/TCAS/Estimates",29.05.2024,"Signalling Alteration/Modification works in existing/proposed Kavach territory","https://indianrailways.gov.in/railwayboard/uploads/directorate/signal/2024/Signalling%20Alteration%20or%20Modification%20works%20in%20existing%20or%20proposed%20Kavach%20territory.pdf"
-"2021/Sig/TCAS",04.10.2023,"Kavach Working Group","https://indianrailways.gov.in/railwayboard/uploads/directorate/signal/2023/04_10_23.pdf"
-"2023/S&T/Dev/Kavach Corrres",11.09.2023,"Advance execution of Infrastructure works Towers, OFC, Buildings & Feeder Power Supply on GQ, GD routes.","https://indianrailways.gov.in/railwayboard/uploads/directorate/signal/2023/11_09_23.pdf"
-"2020/Sig/TCAS/Development",04.07.2023,"Sections identified for survey of Kavach on GQ/GD Routes.","https://indianrailways.gov.in/railwayboard/uploads/directorate/signal/2023/Sections%20identified%20for%20survey%20of%20Kavach%20on%20GQGD%20Routes(1).pdf"
-"2020/Sig/IRISET",31.05.2023,"Special courses on ‘Kavach’ for Dy.CSTEs/Sr.DSTEs","https://indianrailways.gov.in/railwayboard/uploads/directorate/signal/2023/31_05_23%20Special%20courses%20on%20%E2%80%98Kavach%E2%80%99%20for%20Dy_CSTEsSr_DSTEs.pdf"
-"2020/Sig/TCAS/Estimates (e3316629)",18.05.2023,"Components of Kavach/CTC inclusion in yard remodeling/ABS/LC gate/Signalling works","https://indianrailways.gov.in/railwayboard/uploads/directorate/signal/2023/Letter%20dtd%2018_05_23%20(2).pdf"
-"2022/Sig/33/1/SEM/Misc",31.03.2023,"Addendum and Corrigendum Slip No. 1 of the IRSEM, July 2021 – Para no. 9.2.1, 9.2.2, 22.3.1","https://indianrailways.gov.in/railwayboard/uploads/directorate/signal/2023/letter%20dtd%2031_03_23.pdf"
-"2021/Sig/Committee/KavachmaintenanceCost",31.01.2022,"EPC Tender for provision of TCAS in New Delhi Mumbai, New Delhi Howrah sections and other section of IR.","https://indianrailways.gov.in/railwayboard/uploads/directorate/signal/2021/1(1).pdf"
-"2013/Sig/TCAS/status",18.01.2021,"EPC Tender for provision of TCAS in new Delhi –Mumbai, New Delhi- Howrah sections and other sections of IR.","https://indianrailways.gov.in/railwayboard/uploads/directorate/signal/2021/14.pdf"
-"2014/Sig/ATP/IR",18.02.2021,"Approved scheme for TCAS & Automatic Signalling.","https://indianrailways.gov.in/railwayboard/uploads/directorate/signal/2021/10.pdf"
-"2014/Sig/ATP/IR",19.02.2021,"Committee for interoperability of features between TCAS & ETCS level-2","https://indianrailways.gov.in/railwayboard/uploads/directorate/signal/2021/7.pdf"
-"2014/Sig/TPWS/160 kmph/Pt./loose",30.03.2021,"Raising speed to 160 kmph on new Delhi-Mumbai central route.","https://indianrailways.gov.in/railwayboard/uploads/directorate/signal/2021/1.pdf"
-"2016/Sig/Modernisation",02.01.2020,"Provision of Modern Automatic Train Protection System.","https://indianrailways.gov.in/railwayboard/uploads/directorate/signal/2020/19.pdf"
-"2013/Sig/TCAS/Status",16.01.2020,"Request for approval for engaging consultancy services at international level to develop interoperability between ETCS Level-2 and TCAS...","https://indianrailways.gov.in/railwayboard/uploads/directorate/signal/2020/12_16012020.pdf"
-"2013/Sig/TCAS/status",30.01.2020,"Execution of works of TCAS on 1200 km on SCR- Monitoring.","https://indianrailways.gov.in/railwayboard/uploads/directorate/signal/2020/10.pdf"
-"2019/Sig/17/36/ETCS L-2(e-3304767)",17.04.2020,"Applying for associate membership of EULYNX for designing of Interface between EI/Relay Interlocking and RBC in the project of ETCS L-2","https://indianrailways.gov.in/railwayboard/uploads/directorate/signal/2020/13-20.pdf"
-"2014/Sig/TPWS/160KMPH/Loose",09.10.2019,"Signalling and Telecommunication works in connection with raising of speed to 160 KMPH in Delhi- Mumbai and Delhi –Kolkata Section preparation of Detailed Estimates","https://indianrailways.gov.in/railwayboard/uploads/directorate/signal/2019/49-2019.pdf"
-"2017/Sig/Modernization Signalling",24.10.2019,"Organizing Technical Workshop on Automatic Train Protection (ATP) System with special focus on ETCS Level-2.","https://indianrailways.gov.in/railwayboard/uploads/directorate/signal/2019/43-2019.pdf"
-"2014/Sig/TPWS/160 KMPH/Loose",28.10.19,"Signalling and Telecommunication works in connection with raising of speed to 160 KMPH in Delhi – Mumbai and Delhi – Kolkata Sections – preparation of Detailed Estimate.","https://indianrailways.gov.in/railwayboard/uploads/directorate/signal/2019/41-2019.pdf"
-"2017/Sig/Modernization/Signaling",31.10.2019,"Sanction of Signalling project deliberated in 34th GCM.","https://indianrailways.gov.in/railwayboard/uploads/directorate/signal/2019/34-2019.pdf"
-"2019/Sig/17/36/ETCS L-2",13.11.2019,"Interoperability of TCAS and ETCS Level-2 ATP Systems.","https://indianrailways.gov.in/railwayboard/uploads/directorate/signal/2019/29-2019.pdf"
-"2017/Sig/Modernization/Signalling",22.11.2019,"Points notes during Hon’ble MR’s interaction with Member of Railway Board on 06.11.2019","https://indianrailways.gov.in/railwayboard/uploads/directorate/signal/2019/27-2019.pdf"
-"2019/AM(Sig)/Insp Note/1",29.11.2019,"Recorded Note on CBTC with AM (SIG),Railway Board during the discussion held on 16.11.2019 at MRVC.","https://indianrailways.gov.in/railwayboard/uploads/directorate/signal/2019/21-2019.pdf"
-"2019/Sig/17/36/ETCS L-2",04.12.2019,"Inter –Operability of TCAS and ETCS Level-2 ATP System.","https://indianrailways.gov.in/railwayboard/uploads/directorate/signal/2019/18-2019.pdf"
-"2017/Sig Modernization",10.12.2019,"Pilot Project of Provision ETCS Level-2 on four Sections of Indian Railway.","https://indianrailways.gov.in/railwayboard/uploads/directorate/signal/2019/13-2019.pdf"
-"2013/Sig/TCAS/Status",12.05.2017,"Field trial for development of TCAS: E70 & CCB type brake interfaced Locos (WAP-5) at speeds up to 160 KMPH.","https://indianrailways.gov.in/railwayboard/uploads/directorate/signal/downloads/circulars/2017/22.pdf"
-"2014/Signal/PMO",07.07.2017,"Inclusion of proposal of TPWS works (ETCS L-I) for Trunk routes in works programme 2018-19.","https://indianrailways.gov.in/railwayboard/uploads/directorate/signal/downloads/circulars/20171/1.pdf"
-"2016/Mobility(S&T)/9/1","29/31.08.2016","Mission Raftaar - Data for Signalling Asset Reliability and Road Map.","https://indianrailways.gov.in/railwayboard/uploads/directorate/signal/downloads/circulars/2016/11_Asset_Reliability.pdf"
-"2013/Sig/TPWS",17.03.2015,"Execution of sanctioned TPWS works on Indian Railways.","https://indianrailways.gov.in/railwayboard/uploads/directorate/signal/downloads/circulars/2015/4.pdf"
-"2013/Sig/TPWS.",22.06.2015,"Provision of Train Protection & Warning System (TPWS) based on ETCL-1 Technology.","https://indianrailways.gov.in/railwayboard/uploads/directorate/signal/downloads/circulars/2015/13.pdf"
-"2010/Sig/OBTPS",27.09.2010,"On Board Train Protection System.","https://indianrailways.gov.in/railwayboard/uploads/directorate/signal/downloads/circulars/2010/10.pdf"
-"2005/Sig./TPWS/1(DLI-AGC)/Vol.II",12.10.2010,"TPWS projects on Railways.","https://indianrailways.gov.in/railwayboard/uploads/directorate/signal/downloads/circulars/2010/9.pdf"`;
-
-
-        function parseCSV(csvString) {
-            const lines = csvString.trim().split('\n');
-            let headerLineIndex = -1;
-            for (let i = 0; i < lines.length; i++) {
-                const potentialHeaders = lines[i].split(',').map(h => h.trim().replace(/^"|"$/g, '').toLowerCase());
-                if ((potentialHeaders.includes("letter no.") || potentialHeaders.includes("document title")) &&
-                    (potentialHeaders.includes("date") && (potentialHeaders.includes("subject") || potentialHeaders.includes("subject / details"))) &&
-                    lines[i].split(',').length >=3) {
-                    headerLineIndex = i;
-                    break;
-                }
-            }
-            if (headerLineIndex === -1) {
-                if (lines.length > 0 && lines[0].split(',').length >= 3) headerLineIndex = 0;
-                else return { headers: [], data: [] };
-            }
-            const headers = lines[headerLineIndex].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
-            const data = [];
-            for (let i = headerLineIndex + 1; i < lines.length; i++) {
-                const currentLine = lines[i].trim();
-                if (!currentLine || currentLine.startsWith(',,,') || /^\d{4},,$/.test(currentLine.replace(/,/g, m => m))) continue;
-                const values = currentLine.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                if (values.every(v => v.trim() === "")) continue;
-
-                const entry = {};
-                let hasEssentialData = false;
-                for (let j = 0; j < headers.length; j++) {
-                    let value = values[j] ? values[j].trim().replace(/^"|"$/g, '').replace(/""/g, '"') : '';
-                    entry[headers[j]] = value;
-                    if (j < 3 && value) hasEssentialData = true;
-                }
-                if (headers.every(h => entry.hasOwnProperty(h)) && hasEssentialData) {
-                    data.push(entry);
-                }
-            }
-            return { headers, data };
-        }
-
-        function renderSimpleTable(dataToRender, tableBodyId, recordCountId, htmlTableHeadersTexts) {
-            const tableBody = document.getElementById(tableBodyId);
-            const recordCountEl = document.getElementById(recordCountId);
-            if (!tableBody || !recordCountEl) { console.error("Missing elements for " + tableBodyId); return; }
-
-            recordCountEl.textContent = `${dataToRender.length} record${dataToRender.length !== 1 ? 's' : ''}`;
-            if (dataToRender.length === 0) {
-                tableBody.innerHTML = `<tr><td colspan="${htmlTableHeadersTexts.length}" class="no-data">No documents match your criteria.</td></tr>`;
-                return;
-            }
-            let tableHTML = '';
-            dataToRender.forEach(row => {
-                tableHTML += '<tr>';
-                htmlTableHeadersTexts.forEach(headerText => {
-                    let cellValue = row[headerText] || '';
-                    const cellClass = (headerText.toLowerCase().includes('subject')) ? 'class="simple-table-subject-cell"' : '';
-                    
-                    if ((headerText === 'Document Title' || headerText === 'Letter No.') && row.Link) {
-                        cellValue = `<a href="${row.Link}" target="_blank" class="file-link">${cellValue}</a>`;
-                    }
-                    
-                    tableHTML += `<td ${cellClass}>${cellValue}</td>`;
-                });
-                tableHTML += '</tr>';
-            });
-            tableBody.innerHTML = tableHTML;
-        }
-
-        function applySimpleTableSearch(fullDataset, tableBodyId, recordCountId, tableHeadersElements) {
-            let filteredData = fullDataset;
-            if (globalSearchTerm) {
-                filteredData = fullDataset.filter(row =>
-                    Object.values(row).some(value =>
-                        value && value.toString().toLowerCase().includes(globalSearchTerm)
-                    )
-                );
-            }
-            const displayTableHeadersTexts = Array.from(tableHeadersElements).map(th => th.textContent.trim());
-            renderSimpleTable(filteredData, tableBodyId, recordCountId, displayTableHeadersTexts);
-        }
-        // --- END RDSO/RB SCRIPT ---
-
-        // --- GLOBAL UTILITIES ---
-        function updateAllTabCounts() {
-            // KMP Count
-            let kmpCount = allKMPData.length;
-            if (globalSearchTerm) {
-                kmpCount = allKMPData.filter(item =>
-                    Object.values(item).some(value => value && value.toString().toLowerCase().includes(globalSearchTerm))
-                ).length;
-            }
-            document.querySelector('#kmpTabButton .tab-record-count').textContent = `(${kmpCount})`;
-
-            // RDSO Count
-            let rdsoCount = allRDSOData.data.length;
-            if (globalSearchTerm) {
-                rdsoCount = allRDSOData.data.filter(row =>
-                    Object.values(row).some(value => value && value.toString().toLowerCase().includes(globalSearchTerm))
-                ).length;
-            }
-            document.querySelector('#rdsoTabButton .tab-record-count').textContent = `(${rdsoCount})`;
-            
-            // Railway Board Count
-            let rbCount = allRBData.data.length;
-            if (globalSearchTerm) {
-                rbCount = allRBData.data.filter(row =>
-                    Object.values(row).some(value => value && value.toString().toLowerCase().includes(globalSearchTerm))
-                ).length;
-            }
-            document.querySelector('#rbTabButton .tab-record-count').textContent = `(${rbCount})`;
-        }
-
-
-        function applyGlobalSearch() {
-            const activeTabPane = document.querySelector('.tab-pane.active');
-            if (!activeTabPane) return;
-            const activeTabId = activeTabPane.id;
-
-            if (activeTabId === 'kmpTab') {
-                applyKMPFilters();
-            } else if (activeTabId === 'rdsoTab') {
-                applySimpleTableSearch(allRDSOData.data, 'rdsoTableBody', 'recordCountRDSO', document.getElementById('rdsoDataTable').querySelectorAll('thead th'));
-            } else if (activeTabId === 'rbTab') {
-                applySimpleTableSearch(allRBData.data, 'rbTableBody', 'recordCountRB', document.getElementById('rbDataTable').querySelectorAll('thead th'));
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
             }
         }
-
-        // --- INITIALIZATION ---
+        return gk_fileData[filename] || "";
+        }
+        
         document.addEventListener('DOMContentLoaded', function() {
-            document.title = 'Kavach Library';
+            const navLinkItems = document.querySelectorAll('nav a.nav-item, nav div.nav-item'); 
+            const homeLink = document.getElementById('nav-home');
+            const chatbotLink = document.getElementById('nav-chatbot');
+            const aiSearchLink = document.getElementById('nav-ai-search');
             
-            const globalSearchInput = document.getElementById('globalSearchInput');
-            globalSearchInput.addEventListener('input', (event) => {
-                globalSearchTerm = event.target.value.toLowerCase();
-                applyGlobalSearch();
-                updateAllTabCounts(); // Update counts on every search input
+            const homeContent = document.getElementById('home-content');
+            const iframeContainer = document.getElementById('iframe-container');
+            const mainAppHeader = document.getElementById('main-app-header');
+
+            const loadingPlaceholderModules = document.getElementById('loading-placeholder-modules');
+            const moduleCardsContainer = document.getElementById('module-cards-container');
+            
+            const loadingPlaceholderMap = document.getElementById('loading-placeholder-map');
+            const kavachStatusContainer = document.getElementById('kavach-status-container');
+
+            const loadingPlaceholderActivities = document.getElementById('loading-placeholder-activities');
+            const recentActivitiesContainer = document.getElementById('recent-activities-container');
+
+
+            navLinkItems.forEach(link => {
+                if (link.hasAttribute('onclick') && link.getAttribute('onclick').includes('toggleSubmenu')) {
+                    return;
+                }
+
+                link.addEventListener('click', function(e) {
+                    if (!(this.hasAttribute('onclick') && this.getAttribute('onclick').includes('toggleSubmenu'))) {
+                        e.preventDefault(); 
+                    }
+                    
+                    navLinkItems.forEach(navLink => {
+                        navLink.classList.remove('active', 'bg-gray-800', 'text-white');
+                        const icon = navLink.querySelector('i:first-child');
+                        if (icon) {
+                            icon.classList.remove('text-blue-400');
+                        }
+                        const chevron = navLink.querySelector('.fa-chevron-down, .fa-chevron-up');
+                        if (chevron && !navLink.nextElementSibling?.classList.contains('active')) { 
+                        }
+                    });
+                    
+                    this.classList.add('active', 'bg-gray-800', 'text-white');
+                    const icon = this.querySelector('i:first-child');
+                    if (icon) {
+                        icon.classList.add('text-blue-400');
+                    }
+
+                    if (this.closest('.submenu')) {
+                        const parentNavItem = this.closest('.submenu').previousElementSibling;
+                        if (parentNavItem && parentNavItem.classList.contains('nav-item')) {
+                             parentNavItem.classList.add('active', 'bg-gray-800', 'text-white');
+                             const parentIcon = parentNavItem.querySelector('i:first-child');
+                             if (parentIcon) {
+                                parentIcon.classList.add('text-blue-400');
+                             }
+                        }
+                    }
+                });
             });
 
-            fetchKMPData();
+            if (homeLink) {
+                homeLink.addEventListener('click', () => {
+                    if (mainAppHeader) mainAppHeader.classList.remove('hidden');
+                    homeContent.classList.remove('hidden');
+                    iframeContainer.classList.add('hidden');
+                    iframeContainer.innerHTML = ''; 
+                });
+            }
 
-            // Parse and render RDSO data
-            const rdsoParsedResult = parseCSV(rdsoCsvData);
-            allRDSOData.data = rdsoParsedResult.data;
-            allRDSOData.headers = rdsoParsedResult.headers; 
-            const rdsoTableHeadersElements = document.getElementById('rdsoDataTable').querySelectorAll('thead th');
-            const rdsoDisplayHeadersTexts = Array.from(rdsoTableHeadersElements).map(th => th.textContent.trim());
-            renderSimpleTable(allRDSOData.data, 'rdsoTableBody', 'recordCountRDSO', rdsoDisplayHeadersTexts);
+            if (chatbotLink) {
+                chatbotLink.addEventListener('click', () => {
+                    if (mainAppHeader) mainAppHeader.classList.add('hidden');
+                    homeContent.classList.add('hidden');
+                    iframeContainer.innerHTML = `<iframe src="https://iriset.railnet.gov.in/content/CoE/kavachchatbot.html" style="width:100%; height:100%; border:none;" title="Kavach Chatbot"></iframe>`;
+                    iframeContainer.classList.remove('hidden');
+                });
+            }
 
-            // Parse and render Railway Board data
-            const rbParsedResult = parseCSV(railwayBoardCsvData);
-            allRBData.data = rbParsedResult.data;
-            allRBData.headers = rbParsedResult.headers; 
-            const rbTableHeadersElements = document.getElementById('rbDataTable').querySelectorAll('thead th');
-            const rbDisplayHeadersTexts = Array.from(rbTableHeadersElements).map(th => th.textContent.trim());
-            renderSimpleTable(allRBData.data, 'rbTableBody', 'recordCountRB', rbDisplayHeadersTexts);
+            if (aiSearchLink) {
+                aiSearchLink.addEventListener('click', () => {
+                    if (mainAppHeader) mainAppHeader.classList.add('hidden');
+                    homeContent.classList.add('hidden');
+                    iframeContainer.innerHTML = `<iframe src="https://coekav-signallingsearch.hf.space/" style="width:100%; height:100%; border:none;" title="AI Search"></iframe>`;
+                    iframeContainer.classList.remove('hidden');
+                });
+            }
+            
+            // Content loading simulation
+            // Order: Modules (1), Kavach Map (2), Activities (3)
+            const baseDelay = 500; // Initial delay before anything starts showing
 
-            // Set initial tab counts after all data is loaded
-            updateAllTabCounts();
+            setTimeout(() => {
+                if (loadingPlaceholderModules) loadingPlaceholderModules.style.display = 'none';
+                if (moduleCardsContainer) {
+                    moduleCardsContainer.classList.remove('hidden');
+                    // Trigger animation for the card itself
+                    moduleCardsContainer.style.opacity = '1';
+                    moduleCardsContainer.style.transform = 'translateY(0)';
+                }
+            }, baseDelay + (1 * 100)); // order 1
+
+            setTimeout(() => {
+                if (loadingPlaceholderMap) loadingPlaceholderMap.style.display = 'none';
+                if (kavachStatusContainer) {
+                    kavachStatusContainer.classList.remove('hidden');
+                    kavachStatusContainer.style.opacity = '1';
+                    kavachStatusContainer.style.transform = 'translateY(0)';
+                }
+            }, baseDelay + (2 * 100)); // order 2
+            
+            setTimeout(() => {
+                if (loadingPlaceholderActivities) loadingPlaceholderActivities.style.display = 'none';
+                if (recentActivitiesContainer) {
+                    recentActivitiesContainer.classList.remove('hidden');
+                    recentActivitiesContainer.style.opacity = '1';
+                    recentActivitiesContainer.style.transform = 'translateY(0)';
+                }
+            }, baseDelay + (3 * 100)); // order 3
+
         });
+        
+        function toggleSubmenu(element) {
+            const submenu = element.nextElementSibling;
+            const icon = element.querySelector('.fa-chevron-down, .fa-chevron-up');
+            
+            submenu.classList.toggle('active');
+            icon.classList.toggle('rotate-180');
+        }
+        
+        function openModule(moduleName) {
+            alert(`Opening ${moduleName} module...`);
+        }
+        
     </script>
 </body>
 </html>
