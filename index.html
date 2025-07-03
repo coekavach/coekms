@@ -50,6 +50,19 @@
             100% { transform: translateY(-50%); }
         } */
         
+        /* MODIFICATION: Added animation for the search card background */
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .animated-search-bg {
+            background: linear-gradient(-45deg, #e1f0f4, #e5f2e2, #f3f4e2, #d2e8ee);
+            background-size: 400% 400%;
+            animation: gradient-shift 15s ease infinite;
+        }
+        
         .logo-animate {
             animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
@@ -531,8 +544,8 @@
             <div id="page-content-area" class="flex-1 overflow-y-auto relative"> 
                 <!-- Dashboard Content (Home) -->
                 <main id="home-content" class="p-8">
-                    <!-- Search Knowledgebase Card -->
-                    <div class="dashboard-card bg-white rounded-xl shadow-md p-6 mb-6" style="--order: 0;">
+                    <!-- MODIFICATION: Changed bg-white to animated-search-bg -->
+                    <div class="dashboard-card animated-search-bg rounded-xl shadow-md p-6 mb-6" style="--order: 0;">
                         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                             <div class="relative flex-1">
                                 <input type="text" placeholder="Search knowledge base..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -702,8 +715,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Leaflet JS and related scripts are no longer needed -->
 
     <script>
         // GK variables (already present)
