@@ -6,7 +6,6 @@
     <title>KMS: Knowledge Management System - Kavach</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Leaflet CSS and JS are no longer needed as the map is replaced by an iframe -->
     <style>
         @keyframes popIn {
             0% { transform: scale(0.5); opacity: 0; }
@@ -45,12 +44,6 @@
             100% { background-position: 1000px 0; }
         }
         
-        /* @keyframes scrollUp {  REMOVED
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-50%); }
-        } */
-        
-        /* MODIFICATION: Added animation for the search card background */
         @keyframes gradient-shift {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
@@ -65,20 +58,6 @@
         
         .logo-animate {
             animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-        }
-        
-        .header-underline {
-            position: relative;
-        }
-        
-        .header-underline::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            height: 3px;
-            background: #3b82f6;
-            animation: underlineExpand 0.8s ease-out forwards;
         }
         
         .nav-item {
@@ -107,111 +86,73 @@
         
         .dashboard-card {
             animation: cardEnter 0.5s ease-out forwards;
-            animation-delay: calc(var(--order) * 0.1s); /* This will default to 0s if --order is not set on an element */
+            animation-delay: calc(var(--order) * 0.1s);
             transform: translateY(20px);
             opacity: 0;
             transition: all 0.3s ease;
-            transform-style: preserve-3d;
-            perspective: 1000px;
         }
         
-        .dashboard-card:hover {
-            /* Default hover for general dashboard cards if needed, but module items have their own */
-        }
-        
-        .dashboard-card:hover .card-icon { /* This was for older, larger card icons */
-            animation: pulse 1.5s infinite;
-        }
-        
-        .card-icon { /* This was for older, larger card icons */
-            transition: all 0.3s ease;
-        }
-        
-        .shine-effect {
+        .map-container {
             position: relative;
+            width: 100%;
+            height: 500px;
+            background-color: #f0f4f8;
+            border-radius: 0.5rem;
             overflow: hidden;
         }
         
-        .shine-effect::after {
+        .page-load-animation {
+            animation: slideInFromTop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        
+        .shimmer-bg {
+            background: linear-gradient(to right, #eff1f3 4%, #e2e2e2 25%, #eff1f3 36%);
+            background-size: 1000px 100%;
+            animation: shimmer 1.5s infinite linear;
+        }
+        
+        .loading-placeholder {
+            height: 100px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .scrolling-container {
+            position: relative;
+        }
+
+        /* MODIFICATION: New background image and style */
+        #page-content-area {
+            isolation: isolate;
+        }
+
+        #page-content-area::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -60%;
-            width: 200%;
-            height: 200%;
-            background: rgba(255, 255, 255, 0.13);
-            background: linear-gradient(
-                to right,
-                rgba(255, 255, 255, 0.13) 0%,
-                rgba(255, 255, 255, 0.13) 77%,
-                rgba(255, 255, 255, 0.5) 92%,
-                rgba(255, 255, 255, 0.0) 100%
-            );
-            transform: rotate(30deg);
-            transition: all 0.4s ease;
-            opacity: 0;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 350px; /* Control the height of the decorative element */
+            z-index: -1;
+            
+            background-image: url('https://i.postimg.cc/zBXx68WS/Eslqqq-NOr1-U4-AAB6xo.jpg');
+            background-position: center bottom;
+            background-repeat: no-repeat;
+            background-size: cover;
+            
+            /* Create a soft fade-out effect at the top */
+            mask-image: linear-gradient(to top, rgba(0,0,0,1) 30%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 30%, transparent 100%);
+            
+            opacity: 0.7; 
         }
-        
-        .shine-effect:hover::after {
-            left: 100%;
-            opacity: 1;
-            transition-property: left, opacity;
-            transition-duration: 0.7s, 0.15s;
-            transition-timing-function: ease;
+
+        /* MODIFICATION: Reverted header to a clean, solid style */
+        #main-app-header {
+            background-color: white;
+            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
         }
-        
-        .signal-green {
-            background-color: #10b981;
-            box-shadow: 0 0 10px #10b981;
-        }
-        
-        .signal-yellow {
-            background-color: #f59e0b;
-            box-shadow: 0 0 10px #f59e0b;
-        }
-        
-        .signal-red {
-            background-color: #ef4444;
-            box-shadow: 0 0 10px #ef4444;
-        }
-        
-        .signal-light {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            display: inline-block;
-            margin-right: 5px;
-        }
-        
-        .progress-bar {
-            height: 6px;
-            border-radius: 3px;
-            background-color: #e5e7eb;
-            overflow: hidden;
-        }
-        
-        .progress-bar-fill {
-            height: 100%;
-            border-radius: 3px;
-            transition: width 0.6s ease;
-        }
-        
-        .delay-indicator {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background-color: #ef4444;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 10px;
-            font-weight: bold;
-        }
-        
+
         .submenu {
             max-height: 0;
             overflow: hidden;
@@ -225,83 +166,6 @@
         .submenu-item {
             padding-left: 2.5rem;
         }
-        
-        .map-container {
-            position: relative;
-            width: 100%;
-            height: 500px; /* This height will be applied to the iframe parent */
-            background-color: #f0f4f8;
-            border-radius: 0.5rem;
-            overflow: hidden;
-        }
-        
-        /* #kavach-map is no longer needed as it's replaced by an iframe */
-        
-        .module-card { /* General class for clickable module items, specific hover is now Tailwind */
-            transition: all 0.3s ease; /* Keep for non-transform/shadow transitions if any */
-            cursor: pointer;
-        }
-        
-        /* .module-card:hover is now primarily handled by Tailwind utility classes on the items */
-        /* Old .module-icon style can be removed if not used elsewhere */
-        .module-icon { 
-            /* font-size: 2rem; */ /* Handled by Tailwind */
-            /* margin-bottom: 1rem; */ /* Handled by Tailwind */
-        }
-        
-        /* Legend styles might not be needed if the iframe has its own legend */
-        .legend {
-            padding: 10px;
-            background: white;
-            border-radius: 5px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-            line-height: 1.5;
-            color: #555;
-        }
-        
-        .legend i {
-            opacity: 0.9;
-        }
-        
-        .info {
-            padding: 6px 8px;
-            font: 14px/16px Arial, Helvetica, sans-serif;
-            background: white;
-            background: rgba(255,255,255,0.8);
-            box-shadow: 0 0 15px rgba(0,0,0,0.2);
-            border-radius: 5px;
-        }
-        
-        .page-load-animation {
-            animation: slideInFromTop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-        }
-        
-        .status-bar-animation {
-            animation: fadeIn 1s ease-out 0.5s forwards;
-            opacity: 0;
-        }
-        
-        .shimmer-bg {
-            background: linear-gradient(to right, #eff1f3 4%, #e2e2e2 25%, #eff1f3 36%);
-            background-size: 1000px 100%;
-            animation: shimmer 1.5s infinite linear;
-        }
-        
-        .loading-placeholder {
-            height: 100px; /* Adjusted height for the module placeholder */
-            border-radius: 8px;
-            margin-bottom: 20px; /* Space before next content loads */
-        }
-        
-        .scrolling-container {
-            /* height: 100%; REMOVED flex-1 and height: 100% from here, will be set inline for fixed height */
-            /* overflow: hidden;  Will be set inline */
-            position: relative;
-        }
-        
-        /* .activity-list {  REMOVED
-            animation: scrollUp 25s linear infinite;
-        } */
     </style>
 </head>
 <body class="bg-gray-100 font-sans">
@@ -319,7 +183,7 @@
             </div>
             
             <!-- Navigation -->
-            <nav class="flex-1 px-4 py-6">
+            <nav class="flex-1 px-4 py-6 overflow-y-auto">
                 <ul class="space-y-1">
                     <li>
                         <a href="#" id="nav-home" class="nav-item active flex items-center px-4 py-3 rounded-lg text-white bg-gray-800">
@@ -374,121 +238,7 @@
                             <span>Reports</span>
                         </a>
                     </li>
-                    <li>
-                        <div class="nav-item flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-800 hover:text-white cursor-pointer" onclick="toggleSubmenu(this)">
-                            <div class="flex items-center">
-                                <i class="fas fa-chart-pie mr-3"></i>
-                                <span>Overview</span>
-                            </div>
-                            <i class="fas fa-chevron-down text-xs transition-transform duration-300"></i>
-                        </div>
-                        <ul class="submenu pl-2">
-                            <li>
-                                <a href="#" class="nav-item flex items-center px-4 py-2 rounded-lg hover:bg-gray-800 hover:text-white submenu-item">
-                                    <i class="fas fa-circle-notch mr-2 text-xs"></i>
-                                    <span>Overview 1</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" class="nav-item flex items-center px-4 py-2 rounded-lg hover:bg-gray-800 hover:text-white submenu-item">
-                                    <i class="fas fa-circle-notch mr-2 text-xs"></i>
-                                    <span>Overview 2</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <div class="nav-item flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-800 hover:text-white cursor-pointer" onclick="toggleSubmenu(this)">
-                            <div class="flex items-center">
-                                <i class="fas fa-blog mr-3"></i>
-                                <span>Manage Blog</span>
-                            </div>
-                            <i class="fas fa-chevron-down text-xs transition-transform duration-300"></i>
-                        </div>
-                        <ul class="submenu pl-2">
-                            <li>
-                                <a href="#" class="nav-item flex items-center px-4 py-2 rounded-lg hover:bg-gray-800 hover:text-white submenu-item">
-                                    <i class="fas fa-circle-notch mr-2 text-xs"></i>
-                                    <span>Blog Categories</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" class="nav-item flex items-center px-4 py-2 rounded-lg hover:bg-gray-800 hover:text-white submenu-item">
-                                    <i class="fas fa-circle-notch mr-2 text-xs"></i>
-                                    <span>Blog Posts</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <div class="nav-item flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-800 hover:text-white cursor-pointer" onclick="toggleSubmenu(this)">
-                            <div class="flex items-center">
-                                <i class="fas fa-sitemap mr-3"></i>
-                                <span>Manage Org</span>
-                            </div>
-                            <i class="fas fa-chevron-down text-xs transition-transform duration-300"></i>
-                        </div>
-                        <ul class="submenu pl-2">
-                            <li>
-                                <a href="#" class="nav-item flex items-center px-4 py-2 rounded-lg hover:bg-gray-800 hover:text-white submenu-item">
-                                    <i class="fas fa-circle-notch mr-2 text-xs"></i>
-                                    <span>Departments</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" class="nav-item flex items-center px-4 py-2 rounded-lg hover:bg-gray-800 hover:text-white submenu-item">
-                                    <i class="fas fa-circle-notch mr-2 text-xs"></i>
-                                    <span>Employees</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <div class="nav-item flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-800 hover:text-white cursor-pointer" onclick="toggleSubmenu(this)">
-                            <div class="flex items-center">
-                                <i class="fas fa-photo-video mr-3"></i>
-                                <span>Manage Multimedia</span>
-                            </div>
-                            <i class="fas fa-chevron-down text-xs transition-transform duration-300"></i>
-                        </div>
-                        <ul class="submenu pl-2">
-                            <li>
-                                <a href="#" class="nav-item flex items-center px-4 py-2 rounded-lg hover:bg-gray-800 hover:text-white submenu-item">
-                                    <i class="fas fa-circle-notch mr-2 text-xs"></i>
-                                    <span>Images</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" class="nav-item flex items-center px-4 py-2 rounded-lg hover:bg-gray-800 hover:text-white submenu-item">
-                                    <i class="fas fa-circle-notch mr-2 text-xs"></i>
-                                    <span>Videos</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <div class="nav-item flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-800 hover:text-white cursor-pointer" onclick="toggleSubmenu(this)">
-                            <div class="flex items-center">
-                                <i class="fas fa-link mr-3"></i>
-                                <span>Manage Link</span>
-                            </div>
-                            <i class="fas fa-chevron-down text-xs transition-transform duration-300"></i>
-                        </div>
-                        <ul class="submenu pl-2">
-                            <li>
-                                <a href="#" class="nav-item flex items-center px-4 py-2 rounded-lg hover:bg-gray-800 hover:text-white submenu-item">
-                                    <i class="fas fa-circle-notch mr-2 text-xs"></i>
-                                    <span>Internal Links</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" class="nav-item flex items-center px-4 py-2 rounded-lg hover:bg-gray-800 hover:text-white submenu-item">
-                                    <i class="fas fa-circle-notch mr-2 text-xs"></i>
-                                    <span>External Links</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
+                    <!-- Add other nav items here -->
                     <li>
                         <a href="#" id="nav-chatbot" class="nav-item flex items-center px-4 py-3 rounded-lg hover:bg-gray-800 hover:text-white">
                             <i class="fas fa-robot mr-3"></i>
@@ -517,9 +267,9 @@
         </div>
         
         <!-- Main Content -->
-        <div class="flex-1 flex flex-col overflow-hidden"> <!-- flex-col for header + content-area -->
+        <div class="flex-1 flex flex-col overflow-hidden">
             <!-- Header -->
-            <header id="main-app-header" class="bg-white shadow-sm shrink-0">
+            <header id="main-app-header" class="shrink-0 bg-white shadow-sm">
                 <div class="px-8 py-6">
                     <div class="flex justify-between items-center">
                         <div class="flex-grow text-center">
@@ -540,11 +290,11 @@
                 </div>
             </header>
             
-            <!-- Page Content Wrapper (takes remaining space) -->
+            <!-- Page Content Wrapper -->
             <div id="page-content-area" class="flex-1 overflow-y-auto relative"> 
                 <!-- Dashboard Content (Home) -->
                 <main id="home-content" class="p-8">
-                    <!-- MODIFICATION: Changed bg-white to animated-search-bg -->
+                    <!-- Search and Actions Card -->
                     <div class="dashboard-card animated-search-bg rounded-xl shadow-md p-6 mb-6" style="--order: 0;">
                         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                             <div class="relative flex-1">
@@ -555,151 +305,130 @@
                                 <select class="border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
                                     <option>All Categories</option>
                                     <option>Kavach</option>
-                                    <option>LTE</option>
-                                    <option>5G</option>
-                                    <option>Organisation</option>
-                                </select>
-                                <select class="border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    <option>Sort by: Recent</option>
-                                    <option>Sort by: Popular</option>
-                                    <option>Sort by: Alphabetical</option>
+                                    <option>Telecom</option>
+                                    <option>Virtual Assistant</option>
                                 </select>
                                 <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200 flex items-center space-x-2">
                                     <i class="fas fa-plus"></i>
-                                    <span>Upload Documents</span>
+                                    <span>Upload</span>
                                 </button>
                             </div>
                         </div>
                     </div>
                                      
-                    <!-- Container for Modules, Kavach Implementation Status, and Letters Marked to me -->
+                    <!-- Grid for Main Content -->
                     <div class="grid grid-cols-1 md:grid-cols-[11fr_4fr] gap-6">
                         
-                        <!-- Left Column: Modules and Kavach Status -->
+                        <!-- Left Column -->
                         <div>
-                            <!-- Loading Placeholder for Modules (removed after content loads) -->
+                            <!-- Loading Placeholder for Modules -->
                             <div id="loading-placeholder-modules" class="shimmer-bg loading-placeholder"></div>
 
                             <!-- Module Cards -->
                             <div id="module-cards-container" class="dashboard-card bg-white rounded-xl shadow-md p-4 mb-6 hidden" style="--order: 1;">
-                                <div class="flex space-x-3 py-2">
-                                    <div class="module-card flex-1 bg-[#e1f0f4] hover:bg-[#d2e8ee] rounded-lg px-4 py-3 flex items-center justify-between cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('KAVACH')">
+                                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 py-2">
+                                    <div class="flex-1 bg-[#e1f0f4] hover:bg-[#d2e8ee] rounded-lg p-3 flex items-center justify-between cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('KAVACH')">
                                         <div class="flex items-center space-x-2.5">
                                             <div class="text-[#588999] text-xl"><i class="fas fa-shield-alt"></i></div>
                                             <h3 class="text-sm font-semibold text-gray-800">Kavach</h3>
                                         </div>
                                         <div class="bg-[#ABD3DE] text-[#3A5A64] rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">70</div>
                                     </div>
-                                    
-                                    <div class="module-card flex-1 bg-[#e5f2e2] hover:bg-[#d8ebd2] rounded-lg px-4 py-3 flex items-center justify-between cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('LTE')">
+                                    <div class="flex-1 bg-[#e5f2e2] hover:bg-[#d8ebd2] rounded-lg p-3 flex items-center justify-between cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('LTE')">
                                         <div class="flex items-center space-x-2.5">
                                             <div class="text-[#698c5f] text-xl"><i class="fas fa-network-wired"></i></div>
                                             <h3 class="text-sm font-semibold text-gray-800">Telecom</h3>
                                         </div>
                                         <div class="bg-[#BDDAB1] text-[#455c3e] rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">45</div>
                                     </div>
-                                    
-                                    <div class="module-card flex-1 bg-[#f3f4e2] hover:bg-[#eaebda] rounded-lg px-4 py-3 flex items-center justify-between cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('5G')">
+                                    <div class="flex-1 bg-[#f3f4e2] hover:bg-[#eaebda] rounded-lg p-3 flex items-center justify-between cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('5G')">
                                         <div class="flex items-center space-x-2.5">
                                             <div class="text-[#8f9260] text-xl"><i class="fas fa-bolt"></i></div>
-                                            <h3 class="text-sm font-semibold text-gray-800">Virtual Assitant</h3>
+                                            <h3 class="text-sm font-semibold text-gray-800">Virtual Assistant</h3>
                                         </div>
                                         <div class="bg-[#DEE1B2] text-[#5d603f] rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">12</div>
                                     </div>
-                                    
-                                    <div class="module-card flex-1 bg-[#e1f0f4] hover:bg-[#d2e8ee] rounded-lg px-4 py-3 flex items-center justify-between cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('7G')">
+                                    <div class="flex-1 bg-[#e1f0f4] hover:bg-[#d2e8ee] rounded-lg p-3 flex items-center justify-between cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('ORGANISATION')">
                                         <div class="flex items-center space-x-2.5">
-                                            <div class="text-[#588999] text-xl"><i class="fas fa-atom"></i></div>
-                                            <h3 class="text-sm font-semibold text-gray-800">ORGANISATION</h3>
+                                            <div class="text-[#588999] text-xl"><i class="fas fa-sitemap"></i></div>
+                                            <h3 class="text-sm font-semibold text-gray-800">Organisation</h3>
                                         </div>
-                                        <div class="bg-[#ABD3DE] text-[#3A5A64] rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">0</div>
+                                        <div class="bg-[#ABD3DE] text-[#3A5A64] rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">98</div>
                                     </div>
-                                    
-                                    <div class="module-card flex-1 bg-[#e5f2e2] hover:bg-[#d8ebd2] rounded-lg px-4 py-3 flex items-center justify-between cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('ORGANISATION')">
+                                    <div class="flex-1 bg-[#e5f2e2] hover:bg-[#d8ebd2] rounded-lg p-3 flex items-center justify-between cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md" onclick="openModule('BLOG')">
                                         <div class="flex items-center space-x-2.5">
-                                            <div class="text-[#698c5f] text-xl"><i class="fas fa-sitemap"></i></div>
-                                            <h3 class="text-sm font-semibold text-gray-800">BLOG</h3>
+                                            <div class="text-[#698c5f] text-xl"><i class="fas fa-blog"></i></div>
+                                            <h3 class="text-sm font-semibold text-gray-800">Blog</h3>
                                         </div>
                                         <div class="bg-[#BDDAB1] text-[#455c3e] rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">110</div>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Loading Placeholder for Kavach Map (removed after content loads) -->
+                            <!-- Loading Placeholder for Map -->
                             <div id="loading-placeholder-map" class="shimmer-bg loading-placeholder" style="height: 560px;"></div>
 
-                            <!-- Kavach Implementation Status Card -->
-                            <div id="kavach-status-container" class="dashboard-card bg-white rounded-xl shadow-md p-6 md:self-start hidden" style="--order: 2;">
-                                <div class="flex justify-between items-center mb-6">
-                                    <div>
-                                        <h2 class="text-xl font-bold text-gray-800">Kavach Installations</h2>
-                                    </div>
-                                </div>
-                                
+                            <!-- Kavach Implementation Map Card -->
+                            <div id="kavach-status-container" class="dashboard-card bg-white rounded-xl shadow-md p-6 hidden" style="--order: 2;">
+                                <h2 class="text-xl font-bold text-gray-800 mb-6">Kavach Installations</h2>
                                 <div class="map-container">
                                     <iframe src="https://coekavach.github.io/coegis/" style="width:100%; height:100%; border:none;" title="Kavach GIS Map"></iframe>
                                 </div>
                             </div>
                         </div>
                         
-                        <!-- Right Column: Letters Marked to me Card -->
-                         <!-- Loading Placeholder for Letters Marked to me (removed after content loads) -->
-                        <div id="loading-placeholder-activities" class="shimmer-bg loading-placeholder" style="height: 560px;"></div>
-
-                        <div id="recent-activities-container" class="dashboard-card bg-white rounded-xl shadow-md p-6 flex flex-col hidden" style="--order: 3;">
-                            <div class="flex justify-between items-center mb-6">
-                                <h2 class="text-xl font-bold text-gray-800">Letters Marked to me</h2>
-                                <button class="text-blue-600 text-sm font-medium">View All</button>
-                            </div>
+                        <!-- Right Column -->
+                        <div>
+                            <!-- Loading Placeholder for Activities -->
+                            <div id="loading-placeholder-activities" class="shimmer-bg loading-placeholder" style="height: 560px;"></div>
                             
-                            <div class="scrolling-container" style="height: 500px; overflow-y: auto; overflow-x: hidden;">
-                                <div class="space-y-4">
-                                    <div class="flex items-start p-4 rounded-lg bg-[#e1f0f4] hover:bg-[#d2e8ee] border-l-4 border-[#588999] shadow-sm hover:shadow-md transition-all duration-200">
-                                        <div class="mr-3 text-[#588999] pt-1 text-lg"><i class="fas fa-train"></i></div>
-                                        <div>
-                                            <p class="font-semibold text-gray-800">Kavach installed on 15 new locomotives</p>
-                                            <p class="text-sm text-gray-600">Northern Railway Zone</p>
-                                            <p class="text-xs text-gray-500 mt-1">2 hours ago</p>
+                            <!-- Letters Marked to me Card -->
+                            <div id="recent-activities-container" class="dashboard-card bg-white rounded-xl shadow-md p-6 flex flex-col hidden" style="--order: 3; height: 100%;">
+                                <div class="flex justify-between items-center mb-6">
+                                    <h2 class="text-xl font-bold text-gray-800">Letters Marked to me</h2>
+                                    <a href="#" class="text-blue-600 text-sm font-medium hover:underline">View All</a>
+                                </div>
+                                <div class="scrolling-container flex-1" style="overflow-y: auto; overflow-x: hidden;">
+                                    <div class="space-y-4">
+                                        <div class="flex items-start p-4 rounded-lg bg-blue-50 border-l-4 border-blue-400 shadow-sm">
+                                            <div class="mr-3 text-blue-500 pt-1 text-lg"><i class="fas fa-train"></i></div>
+                                            <div>
+                                                <p class="font-semibold text-gray-800">Kavach installed on 15 new locomotives</p>
+                                                <p class="text-sm text-gray-600">Northern Railway Zone</p>
+                                                <p class="text-xs text-gray-500 mt-1">2 hours ago</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="flex items-start p-4 rounded-lg bg-[#e5f2e2] hover:bg-[#d8ebd2] border-l-4 border-[#698c5f] shadow-sm hover:shadow-md transition-all duration-200">
-                                        <div class="mr-3 text-[#698c5f] pt-1 text-lg"><i class="fas fa-check-circle"></i></div>
-                                        <div>
-                                            <p class="font-semibold text-gray-800">Testing completed for LTE integration</p>
-                                            <p class="text-sm text-gray-600">Eastern Railway Zone</p>
-                                            <p class="text-xs text-gray-500 mt-1">5 hours ago</p>
+                                        <div class="flex items-start p-4 rounded-lg bg-green-50 border-l-4 border-green-400 shadow-sm">
+                                            <div class="mr-3 text-green-500 pt-1 text-lg"><i class="fas fa-check-circle"></i></div>
+                                            <div>
+                                                <p class="font-semibold text-gray-800">Testing completed for LTE integration</p>
+                                                <p class="text-sm text-gray-600">Eastern Railway Zone</p>
+                                                <p class="text-xs text-gray-500 mt-1">5 hours ago</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="flex items-start p-4 rounded-lg bg-[#f3f4e2] hover:bg-[#eaebda] border-l-4 border-[#8f9260] shadow-sm hover:shadow-md transition-all duration-200">
-                                        <div class="mr-3 text-[#8f9260] pt-1 text-lg"><i class="fas fa-exclamation-triangle"></i></div>
-                                        <div>
-                                            <p class="font-semibold text-gray-800">Maintenance required for 5G test equipment</p>
-                                            <p class="text-sm text-gray-600">Research & Development</p>
-                                            <p class="text-xs text-gray-500 mt-1">1 day ago</p>
+                                        <div class="flex items-start p-4 rounded-lg bg-yellow-50 border-l-4 border-yellow-400 shadow-sm">
+                                            <div class="mr-3 text-yellow-500 pt-1 text-lg"><i class="fas fa-exclamation-triangle"></i></div>
+                                            <div>
+                                                <p class="font-semibold text-gray-800">Maintenance required for 5G test equipment</p>
+                                                <p class="text-sm text-gray-600">Research & Development</p>
+                                                <p class="text-xs text-gray-500 mt-1">1 day ago</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="flex items-start p-4 rounded-lg bg-[#e1f0f4] hover:bg-[#d2e8ee] border-l-4 border-[#588999] shadow-sm hover:shadow-md transition-all duration-200">
-                                        <div class="mr-3 text-[#588999] pt-1 text-lg"><i class="fas fa-train"></i></div>
-                                        <div>
-                                            <p class="font-semibold text-gray-800">Kavach installed on 15 new locomotives</p>
-                                            <p class="text-sm text-gray-600">Northern Railway Zone</p>
-                                            <p class="text-xs text-gray-500 mt-1">2 hours ago</p>
+                                        <div class="flex items-start p-4 rounded-lg bg-blue-50 border-l-4 border-blue-400 shadow-sm">
+                                            <div class="mr-3 text-blue-500 pt-1 text-lg"><i class="fas fa-file-alt"></i></div>
+                                            <div>
+                                                <p class="font-semibold text-gray-800">New circular on safety protocols issued</p>
+                                                <p class="text-sm text-gray-600">All Zones</p>
+                                                <p class="text-xs text-gray-500 mt-1">2 days ago</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="flex items-start p-4 rounded-lg bg-[#e5f2e2] hover:bg-[#d8ebd2] border-l-4 border-[#698c5f] shadow-sm hover:shadow-md transition-all duration-200">
-                                        <div class="mr-3 text-[#698c5f] pt-1 text-lg"><i class="fas fa-check-circle"></i></div>
-                                        <div>
-                                            <p class="font-semibold text-gray-800">Testing completed for LTE integration</p>
-                                            <p class="text-sm text-gray-600">Eastern Railway Zone</p>
-                                            <p class="text-xs text-gray-500 mt-1">5 hours ago</p>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-start p-4 rounded-lg bg-[#f3f4e2] hover:bg-[#eaebda] border-l-4 border-[#8f9260] shadow-sm hover:shadow-md transition-all duration-200">
-                                        <div class="mr-3 text-[#8f9260] pt-1 text-lg"><i class="fas fa-exclamation-triangle"></i></div>
-                                        <div>
-                                            <p class="font-semibold text-gray-800">Maintenance required for 5G test equipment</p>
-                                            <p class="text-sm text-gray-600">Research & Development</p>
-                                            <p class="text-xs text-gray-500 mt-1">1 day ago</p>
+                                         <div class="flex items-start p-4 rounded-lg bg-green-50 border-l-4 border-green-400 shadow-sm">
+                                            <div class="mr-3 text-green-500 pt-1 text-lg"><i class="fas fa-check-circle"></i></div>
+                                            <div>
+                                                <p class="font-semibold text-gray-800">Quarterly report submission approved</p>
+                                                <p class="text-sm text-gray-600">Finance Department</p>
+                                                <p class="text-xs text-gray-500 mt-1">3 days ago</p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -708,7 +437,7 @@
                     </div>
                 </main>
 
-                <!-- Iframe Container (initially hidden, fills parent when visible) -->
+                <!-- Iframe Container -->
                 <div id="iframe-container" class="w-full h-full hidden">
                     <!-- Iframe will be dynamically inserted here -->
                 </div>
@@ -785,9 +514,6 @@
                         if (icon) {
                             icon.classList.remove('text-blue-400');
                         }
-                        const chevron = navLink.querySelector('.fa-chevron-down, .fa-chevron-up');
-                        if (chevron && !navLink.nextElementSibling?.classList.contains('active')) { 
-                        }
                     });
                     
                     this.classList.add('active', 'bg-gray-800', 'text-white');
@@ -809,6 +535,13 @@
                 });
             });
 
+            function showIframe(url, title) {
+                if (mainAppHeader) mainAppHeader.classList.add('hidden');
+                homeContent.classList.add('hidden');
+                iframeContainer.innerHTML = `<iframe src="${url}" style="width:100%; height:100%; border:none;" title="${title}"></iframe>`;
+                iframeContainer.classList.remove('hidden');
+            }
+
             if (homeLink) {
                 homeLink.addEventListener('click', () => {
                     if (mainAppHeader) mainAppHeader.classList.remove('hidden');
@@ -819,61 +552,35 @@
             }
 
             if (chatbotLink) {
-                chatbotLink.addEventListener('click', () => {
-                    if (mainAppHeader) mainAppHeader.classList.add('hidden');
-                    homeContent.classList.add('hidden');
-                    iframeContainer.innerHTML = `<iframe src="https://iriset.railnet.gov.in/content/CoE/kavachchatbot.html" style="width:100%; height:100%; border:none;" title="Kavach Chatbot"></iframe>`;
-                    iframeContainer.classList.remove('hidden');
-                });
+                chatbotLink.addEventListener('click', () => showIframe("https://iriset.railnet.gov.in/content/CoE/kavachchatbot.html", "Kavach Chatbot"));
             }
 
             if (aiSearchLink) {
-                aiSearchLink.addEventListener('click', () => {
-                    if (mainAppHeader) mainAppHeader.classList.add('hidden');
-                    homeContent.classList.add('hidden');
-                    iframeContainer.innerHTML = `<iframe src="https://coekav-signallingsearch.hf.space/" style="width:100%; height:100%; border:none;" title="AI Search"></iframe>`;
-                    iframeContainer.classList.remove('hidden');
-                });
+                aiSearchLink.addEventListener('click', () => showIframe("https://coekav-signallingsearch.hf.space/", "AI Search"));
             }
             
             // Content loading simulation
-            // Order: Modules (1), Kavach Map (2), Activities (3)
-            const baseDelay = 500; // Initial delay before anything starts showing
-
+            const baseDelay = 500;
             setTimeout(() => {
                 if (loadingPlaceholderModules) loadingPlaceholderModules.style.display = 'none';
-                if (moduleCardsContainer) {
-                    moduleCardsContainer.classList.remove('hidden');
-                    // Trigger animation for the card itself
-                    moduleCardsContainer.style.opacity = '1';
-                    moduleCardsContainer.style.transform = 'translateY(0)';
-                }
-            }, baseDelay + (1 * 100)); // order 1
+                if (moduleCardsContainer) moduleCardsContainer.classList.remove('hidden');
+            }, baseDelay + 100);
 
             setTimeout(() => {
                 if (loadingPlaceholderMap) loadingPlaceholderMap.style.display = 'none';
-                if (kavachStatusContainer) {
-                    kavachStatusContainer.classList.remove('hidden');
-                    kavachStatusContainer.style.opacity = '1';
-                    kavachStatusContainer.style.transform = 'translateY(0)';
-                }
-            }, baseDelay + (2 * 100)); // order 2
+                if (kavachStatusContainer) kavachStatusContainer.classList.remove('hidden');
+            }, baseDelay + 200);
             
             setTimeout(() => {
                 if (loadingPlaceholderActivities) loadingPlaceholderActivities.style.display = 'none';
-                if (recentActivitiesContainer) {
-                    recentActivitiesContainer.classList.remove('hidden');
-                    recentActivitiesContainer.style.opacity = '1';
-                    recentActivitiesContainer.style.transform = 'translateY(0)';
-                }
-            }, baseDelay + (3 * 100)); // order 3
+                if (recentActivitiesContainer) recentActivitiesContainer.classList.remove('hidden');
+            }, baseDelay + 300);
 
         });
         
         function toggleSubmenu(element) {
             const submenu = element.nextElementSibling;
             const icon = element.querySelector('.fa-chevron-down, .fa-chevron-up');
-            
             submenu.classList.toggle('active');
             icon.classList.toggle('rotate-180');
         }
